@@ -1,0 +1,11 @@
+[Unit]
+Description=pidesktop shutdown service
+DefaultDependencies=no
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/thinclient/desktop/pidesktop.sh pd-shutdown.py
+
+[Install]
+WantedBy=shutdown.target

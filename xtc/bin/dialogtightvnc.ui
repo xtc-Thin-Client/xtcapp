@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogTightVNC</class>
+ <widget class="QDialog" name="DialogTightVNC">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>646</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TightVNC</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>20</y>
+     <width>631</width>
+     <height>381</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="vncLabelName">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="vncInputName"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="vncLabelAddress">
+      <property name="text">
+       <string>Adresse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="vncInputAddress"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="vncLabelPort">
+      <property name="text">
+       <string>Port</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="vncInputPort"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="vncLabelPassword">
+      <property name="text">
+       <string>Passwort</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="vncInputPassword"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="vncLabelResolution">
+      <property name="text">
+       <string>Auflösung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QComboBox" name="vncInputResolution"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="vncLabelColor">
+      <property name="text">
+       <string>Farbtiefe</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="vncInputColor"/>
+    </item>
+    <item row="7" column="0">
+     <widget class="QCheckBox" name="vncInputAutostart">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Automatisch starten</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="vncLabelParameter">
+      <property name="text">
+       <string>Weitere Parameter</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="vncInputParameter"/>
+    </item>
+    <item row="8" column="0">
+     <widget class="QCheckBox" name="vncInputRepeat">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Neu verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="vncLabelAlternative">
+      <property name="text">
+       <string>Alternative</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QComboBox" name="vncInputAlternative"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>410</y>
+     <width>621</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="vncOKButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>OK</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="vncCancelButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Abbrechen</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>vncInputName</tabstop>
+  <tabstop>vncInputAddress</tabstop>
+  <tabstop>vncInputPort</tabstop>
+  <tabstop>vncInputPassword</tabstop>
+  <tabstop>vncInputResolution</tabstop>
+  <tabstop>vncInputColor</tabstop>
+  <tabstop>vncInputParameter</tabstop>
+  <tabstop>vncInputAutostart</tabstop>
+  <tabstop>vncOKButton</tabstop>
+  <tabstop>vncCancelButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

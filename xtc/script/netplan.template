@@ -1,0 +1,13 @@
+network:
+  version: 2
+  renderer: networkd
+  {type}:
+    {connection}:
+      access-points:
+        {ssid}:
+          password: {password}
+      dhcp4: false
+      addresses: [{address}/{netmask}]
+      gateway4: {gateway}
+      nameservers:
+        addresses: [{nameserver}]  

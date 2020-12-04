@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialogx2go</class>
+ <widget class="QDialog" name="Dialogx2go">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>645</width>
+    <height>562</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>x2go</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>621</width>
+     <height>473</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <property name="fieldGrowthPolicy">
+     <enum>QFormLayout::ExpandingFieldsGrow</enum>
+    </property>
+    <item row="0" column="0">
+     <widget class="QLabel" name="x2goLabelName">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="x2goInputName"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="x2goLabelAddress">
+      <property name="text">
+       <string>Adresse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="x2goInputAddress"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="x2goLabelUser">
+      <property name="text">
+       <string>Anwender</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="x2goInputUser"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="x2goLabelPassword">
+      <property name="text">
+       <string>Passwort</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="x2goInputPassword"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="x2goLabelKeyboard">
+      <property name="text">
+       <string>Tastaturlayout</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QComboBox" name="x2goInputKeyboard"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="x2goLabelResolution">
+      <property name="text">
+       <string>Auflösung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="x2goInputResolution"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="x2goLabelDesktop">
+      <property name="text">
+       <string>Desktop</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QComboBox" name="x2goInputDesktop"/>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="x2goLabelParameter">
+      <property name="text">
+       <string>Weitere Parameter</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="x2goInputParameter"/>
+    </item>
+    <item row="14" column="0">
+     <widget class="QLabel" name="x2goLabelAlternative">
+      <property name="text">
+       <string>Alternative</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="1">
+     <widget class="QComboBox" name="x2goInputAlternative"/>
+    </item>
+    <item row="11" column="0">
+     <widget class="QCheckBox" name="x2goInputAutostart">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Automatisch starten</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
+     <widget class="QCheckBox" name="x2goInputRepeat">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Neu verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QCheckBox" name="x2goInputSystemLogin">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Eigenes Login</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>470</y>
+     <width>621</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="x2goOKButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>OK</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="x2goCancelButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Abbrechen</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>x2goInputAddress</tabstop>
+  <tabstop>x2goInputUser</tabstop>
+  <tabstop>x2goInputPassword</tabstop>
+  <tabstop>x2goInputKeyboard</tabstop>
+  <tabstop>x2goInputResolution</tabstop>
+  <tabstop>x2goInputDesktop</tabstop>
+  <tabstop>x2goInputParameter</tabstop>
+  <tabstop>x2goInputName</tabstop>
+  <tabstop>x2goInputSystemLogin</tabstop>
+  <tabstop>x2goInputAutostart</tabstop>
+  <tabstop>x2goInputRepeat</tabstop>
+  <tabstop>x2goInputAlternative</tabstop>
+  <tabstop>x2goOKButton</tabstop>
+  <tabstop>x2goCancelButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

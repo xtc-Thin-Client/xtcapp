@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialogssh</class>
+ <widget class="QDialog" name="Dialogssh">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>644</width>
+    <height>507</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ssh</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>611</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="sshLabelName">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="sshInputName"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="sshLabelAddress">
+      <property name="text">
+       <string>Adresse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="sshInputAddress"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="sshLabelPort">
+      <property name="text">
+       <string>Port</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="sshInputPort"/>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="sshInputLogin"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="sshLabelLogin">
+      <property name="text">
+       <string>Login Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="sshInputPassword"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="sshLabelPassword">
+      <property name="text">
+       <string>Passwort</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="sshInputApplication"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="sshLabelApplication">
+      <property name="text">
+       <string>Anwendung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QCheckBox" name="sshInputAutostart">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Automatisch starten</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="sshLabelParameter">
+      <property name="text">
+       <string>Weitere Parameter</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="sshInputParameter"/>
+    </item>
+    <item row="8" column="0">
+     <widget class="QCheckBox" name="sshInputRepeat">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Neu verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="sshLabelAlternative">
+      <property name="text">
+       <string>Alternative</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QComboBox" name="sshInputAlternative"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>400</y>
+     <width>611</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="sshOKButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>OK</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="sshCancelButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Abbrechen</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>sshInputName</tabstop>
+  <tabstop>sshInputAddress</tabstop>
+  <tabstop>sshInputPort</tabstop>
+  <tabstop>sshInputLogin</tabstop>
+  <tabstop>sshInputPassword</tabstop>
+  <tabstop>sshInputApplication</tabstop>
+  <tabstop>sshInputParameter</tabstop>
+  <tabstop>sshInputAutostart</tabstop>
+  <tabstop>sshOKButton</tabstop>
+  <tabstop>sshCancelButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

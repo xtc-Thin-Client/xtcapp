@@ -1,0 +1,3 @@
+tmpfs	/tmp                tmpfs   nodev,nosuid        0   0
+tmpfs	/home/thinclient    tmpfs   nodev,nosuid        0   0
+tmpfs	/var/log            tmpfs   nodev,nosuid        0   0

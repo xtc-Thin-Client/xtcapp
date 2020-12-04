@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogXdmcp</class>
+ <widget class="QDialog" name="DialogXdmcp">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>479</width>
+    <height>443</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>XDMCP</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>451</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="1" column="0">
+     <widget class="QLabel" name="xdmcpLabelAddress">
+      <property name="text">
+       <string>Adresse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="xdmcpInputAddress"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="xdmcpLabelPort">
+      <property name="text">
+       <string>Port</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="xdmcpInputPort"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QCheckBox" name="xdmcpInputAutostart">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Automatisch starten</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="xdmcpLabelName">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="xdmcpInputName"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="xdmcpLabelParameter">
+      <property name="text">
+       <string>Weitere Parameter</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="xdmcpInputParameter"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="xdmcpLabelResolution">
+      <property name="text">
+       <string>Auflösung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="xdmcpInputResolution"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QCheckBox" name="xdmcpInputRepeat">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Neu verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="xdmcpLabelAlternative">
+      <property name="text">
+       <string>Alternative</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QComboBox" name="xdmcpInputAlternative"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>330</y>
+     <width>451</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="xdmcpOKButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>OK</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="xdmcpCancelButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Abbrechen</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>xdmcpInputName</tabstop>
+  <tabstop>xdmcpInputAddress</tabstop>
+  <tabstop>xdmcpInputPort</tabstop>
+  <tabstop>xdmcpInputResolution</tabstop>
+  <tabstop>xdmcpInputParameter</tabstop>
+  <tabstop>xdmcpInputAutostart</tabstop>
+  <tabstop>xdmcpOKButton</tabstop>
+  <tabstop>xdmcpCancelButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

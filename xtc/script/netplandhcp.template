@@ -1,0 +1,8 @@
+network:
+  version: 2  
+  {type}:
+    {connection}:
+      access-points:
+        {ssid}:
+          password: {password}
+      dhcp4: true

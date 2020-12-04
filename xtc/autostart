@@ -1,0 +1,6 @@
+xsetroot -solid "#90EE90"
+tint2 &
+wmctrl -s 0 | thinclient &
+sleep 3
+wmctrl -r Thinclient -t 0 & 
+/opt/thinclient/script/remote.sh &

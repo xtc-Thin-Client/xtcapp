@@ -1,0 +1,100 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          thinclient_shutdown
+# Required-Start:    $syslog $time $remote_fs
+# Required-Stop:     $syslog $time $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: thinclient configuration
+# Description:       Debian init script for thinclient configuration
+### END INIT INFO
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+case "$1" in
+  start)
+    ;;
+  stop)
+    mount -o remount,rw /
+    mount -o remount,rw /boot
+    
+    if (test -s /data/thinclient/interfaces)
+    then
+      cp /data/thinclient/interfaces /etc/network/interfaces
+      rm /data/thinclient/interfaces
+    fi
+        
+    if (test -s /data/thinclient/netplan)
+    then
+      NETPLANFILE=$(ls /etc/netplan)
+      cp /data/thinclient/netplan /etc/netplan/$NETPLANFILE
+      rm /data/thinclient/netplan
+    fi
+    
+    if (test -s /data/thinclient/dhcpcd)
+    then
+      cp /data/thinclient/dhcpcd /etc/dhcpcd.conf
+      rm /data/thinclient/dhcpcd
+      # create /etc/resolv.conf
+      /sbin/dhclient
+    fi
+    
+    if (test -s /data/thinclient/resolv.conf)
+    then
+      cp /data/thinclient/resolv.conf /etc
+      rm /data/thinclient/resolv.conf
+    fi
+    
+    if (test -s /data/thinclient/wlan)
+    then
+      cp /data/thinclient/wlan /etc/wpa_supplicant/wpa_supplicant.conf
+      chown root:root /etc/wpa_supplicant/wpa_supplicant.conf
+      chmod u=rw,g=r,o=r /etc/wpa_supplicant/wpa_supplicant.conf
+      rm /data/thinclient/wlan      
+    fi
+    
+    cp /data/thinclient/keyboard /etc/default
+
+    if (test -s /data/thinclient/configuration)
+    then
+      sh /data/thinclient/configuration
+      rm /data/thinclient/configuration
+    fi
+    
+    if (test -s /data/thinclient/argon1start)
+    then
+      sh /opt/thinclient/script/argon1start.sh
+      rm /data/thinclient/argon1start
+    fi
+    
+    if (test -s /data/thinclient/argon1stop)
+    then
+      sh /opt/thinclient/script/argon1stop.sh
+      rm /data/thinclient/argon1stop
+    fi    
+    
+    if (test -s /data/thinclient/usbautomounton)
+    then
+      sh /opt/thinclient/script/setusb.sh on
+      rm /data/thinclient/usbautomounton
+    fi    
+    
+    if (test -s /data/thinclient/usbautomountoff)
+    then
+      sh /opt/thinclient/script/setusb.sh off
+      rm /data/thinclient/usbautomountoff
+    fi    
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/thinclient {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

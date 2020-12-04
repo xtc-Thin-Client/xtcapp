@@ -1,0 +1,7 @@
+auto lo
+iface lo inet loopback
+
+allow-hotplug {connection}
+iface {connection} inet dhcp
+  wpa-ssid {ssid}
+  wpa-psk {password}

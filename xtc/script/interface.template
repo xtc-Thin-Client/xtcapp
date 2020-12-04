@@ -1,0 +1,11 @@
+auto lo
+iface lo inet loopback
+
+allow-hotplug {connection}
+iface {connection} inet static
+  address {address}
+  netmask {netmask}
+  gateway {gateway}
+  dns-nameservers {nameserver}
+  wpa-ssid {ssid}
+  wpa-psk {password}

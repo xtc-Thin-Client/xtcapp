@@ -1,0 +1,40 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          thinclient_start
+# Required-Start:    $syslog $time $remote_fs
+# Required-Stop:     $syslog $time $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: thinclient configuration
+# Description:       Debian init script for thinclient configuration
+### END INIT INFO
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+case "$1" in
+  start)
+        cp -a /var/thinclient/home/thinclient /home
+        # set sound to autologin
+        amixer cset numid=3 0  
+        # set speaker volume
+        amixer sset 'PCM' 90%
+        if (test -e /data/thinclient/sshon)
+        then
+            systemctl start ssh.service
+        fi
+    ;;
+  stop)
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/thinclient {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0
