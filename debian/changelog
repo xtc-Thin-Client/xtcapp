@@ -1,5 +1,5 @@
-xtc (1.7.1-1) UNRELEASED; urgency=low
+xtc (1.7.1) UNRELEASED; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release
 
  -- Stephan Eisler <stephan@eisler.de>  Mon, 07 Dec 2020 12:59:38 +0000
