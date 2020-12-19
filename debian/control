@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/xtc-Thin-Client/xtcbin.git
 
 Package: xtc
 Architecture: all
-Depends: ${misc:Depends}, ${shlibs:Depends}, qt5-default, python3-pyqt5
+Depends: ${misc:Depends}, qt5-default, python3-pyqt5
 Description: xtc is a open source thin client software
  xtc is a open source thin client software. Connect to all servers in your network and benefit from their power.
