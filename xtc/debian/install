@@ -1,4 +1,0 @@
-bin/* /opt/thinclient/bin
-config/* /opt/thinclient/config
-script/* /opt/thinclient/script
-desktop/* /opt/thinclient/desktop
