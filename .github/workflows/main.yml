@@ -51,8 +51,8 @@ jobs:
           #gpg_passphrase: ${{ secrets.BINTRAY_GPG_PASSPHRASE }} # Optional, for this to work Bintray requires a GPG public/private keypair configured for the repository owner (individual or organization).
           repository_user: xtc-thin-client
           repository: xtc
-          #package: xtc
-          #version: '1.0'
+          package: xtc
+          version: '1.0'
           upload_path: pool/main/m # Typical for debian repository layout
           publish: 1
           calculate_metadata: true # Schedule metadata calculation after upload
