@@ -35,17 +35,17 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: dawidd6/action-debian-package@27df2d7538fa4974e9bed4b16b8016630a7dfe9d
         uses: dawidd6/action-debian-package@v1.2.0
-        with:
+        #with:
           # Directory where Debian sources are, relative to workspace
           #source_directory: # optional, default is ./
           # Directory where build artifacts will be placed, relative to workspace
-          artifacts_directory: dist # optional, default is ./    
+          #artifacts_directory: # optional, default is ./    
           
     
       - name: Upload deb package to Bintray
         uses: bpicode/github-action-upload-bintray@master
         with:
-          file: dist/*.deb
+          file: ./*.deb
           api_user: ${{ secrets.BINTRAY_API_USER }}
           api_key: ${{ secrets.BINTRAY_API_KEY }} # An API key can be obtained from the user profile page.
           #gpg_passphrase: ${{ secrets.BINTRAY_GPG_PASSPHRASE }} # Optional, for this to work Bintray requires a GPG public/private keypair configured for the repository owner (individual or organization).
