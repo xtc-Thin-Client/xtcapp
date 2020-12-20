@@ -43,8 +43,8 @@ jobs:
           
       - name: Get binary package filename for artifact uploads
         run: |
-            dist_pkg_artifact=`ls -1 artifact/*.deb | head -n 1`
-            echo "::set-env name=dist_pkg_artifact::${dist_pkg_artifact}"
+            echo "dist_pkg_artifact=`ls -1 artifact/*.deb | head -n 1`" >> $GITHUB_ENV
+            echo "::dist_pkg_artifact::${dist_pkg_artifact}"
     
       - name: Upload deb package to Bintray
         uses: bpicode/github-action-upload-bintray@master
