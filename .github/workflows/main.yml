@@ -39,7 +39,7 @@ jobs:
           # Directory where Debian sources are, relative to workspace
           #source_directory: # optional, default is ./
           # Directory where build artifacts will be placed, relative to workspace
-          artifacts_directory: ${{ github.workspace }}/artifact # optional, default is ./    
+          artifacts_directory: artifact # optional, default is ./    
           
     
       - name: Upload deb package to Bintray
