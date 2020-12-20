@@ -41,6 +41,7 @@ jobs:
           # Directory where build artifacts will be placed, relative to workspace
           artifacts_directory: artifact # optional, default is ./    
           
+      - run: find ${{ github.workspace }}
     
       - name: Upload deb package to Bintray
         uses: bpicode/github-action-upload-bintray@master
