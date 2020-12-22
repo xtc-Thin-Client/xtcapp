@@ -1,3 +1,9 @@
+xtc (1.7.2) UNRELEASED; urgency=low
+
+ * first debian package.
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Tue, 22 Dec 2020 07:56:01 +0000
+
 xtc (1.7.1) UNRELEASED; urgency=low
 
   * Initial release
