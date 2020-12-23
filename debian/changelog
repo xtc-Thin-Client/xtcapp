@@ -1,3 +1,9 @@
+xtc (1.7.3) UNRELEASED; urgency=low
+
+ * desktop directory removed
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Tue, 23 Dec 2020 15:51:20 +0000
+ 
 xtc (1.7.2) UNRELEASED; urgency=low
 
  * first debian package.
