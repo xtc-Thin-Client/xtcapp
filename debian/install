@@ -1,4 +1,3 @@
 xtc/bin/* opt/thinclient/bin
 xtc/config/* opt/thinclient/config
 xtc/script/* opt/thinclient/script
-xtc/desktop/* opt/thinclient/desktop
