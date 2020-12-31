@@ -1,3 +1,9 @@
+xtc (1.7.5) UNRELEASED; urgency=low
+
+ * Sign package test
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Tue, 31 Dec 2020 11:48:00 +0000
+
 xtc (1.7.4) UNRELEASED; urgency=low
 
  * Sign package
