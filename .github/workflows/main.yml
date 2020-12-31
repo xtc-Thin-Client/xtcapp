@@ -62,4 +62,4 @@ jobs:
           calculate_metadata: true # Schedule metadata calculation after upload
           deb_distribution: stretch,buster,sid
           deb_component: main
-          deb_architecture: all
+          deb_architecture: armhf,amd64,i386,all
