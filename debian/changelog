@@ -1,3 +1,9 @@
+xtc (1.7.4) UNRELEASED; urgency=low
+
+ * Sign package
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Tue, 31 Dec 2020 10:19:01 +0000
+ 
 xtc (1.7.3) UNRELEASED; urgency=low
 
  * desktop directory removed
