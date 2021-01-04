@@ -1,6 +1,0 @@
-
-# start X after login
-if ! pidof openbox > /dev/null
-then
-    startx    
-fi
