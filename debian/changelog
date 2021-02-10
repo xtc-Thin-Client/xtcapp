@@ -1,3 +1,9 @@
+xtc (1.7.7) UNRELEASED; urgency=low
+
+ * test
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Tue, 10 Feb 2021 19:43:00 +0000
+ 
 xtc (1.7.6) UNRELEASED; urgency=low
 
  * Sign repository test
