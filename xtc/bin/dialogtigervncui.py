@@ -1,128 +1,187 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
+from PyQt5 import *
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+import common
+import dialogtigervncui
+import logging
 
-# Form implementation generated from reading ui file 'dialogtigervnc.ui'
-#
-# Created by: PyQt5 UI code generator 5.14.1
-#
-# WARNING! All changes made in this file will be lost!
+class dialogTigerVNCUI(QtWidgets.QDialog, dialogtigervncui.Ui_DialogTigerVNC):
+    
+    connectionname = ""
+    
+    def __init__(self, name, configfile):
+        super(self.__class__, self).__init__()
+        self.setupUi(self)
+        self.connectionname = name
+        # label
+        common.setRessourceFile(configfile)
+        self.setWindowTitle(common.getRessource("TigerVNCViewerDialogTitle"))
+        self.vncOKButton.setText(common.getRessource("ButtonOK"))
+        self.vncCancelButton.setText(common.getRessource("ButtonCancel"))
+        self.vncLabelName.setText(common.getRessource("configDialogLabelName"))
+        self.vncLabelAddress.setText(common.getRessource("configDialogLabelAddress"))
+        self.vncLabelPort.setText(common.getRessource("configDialogLabelPort"))
+        self.vncLabelPassword.setText(common.getRessource("configDialogLabelPassword"))
+        self.vncLabelResolution.setText(common.getRessource("configDialogLabelResolution"))
+        self.vncLabelColor.setText(common.getRessource("configDialogLabelColor"))
+        self.vncLabelParameter.setText(common.getRessource("configDialogLabelParameter"))
+        self.vncInputAutostart.setText(common.getRessource("configDialogLabelAutostart"))
+        self.vncInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
+        self.vncLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))        
+        self.vncInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.vncLabelIconName.setText(common.getRessource("configDialogLabelIconName"))        
+        #action
+        self.vncOKButton.clicked.connect(self.ButtonOK)
+        self.vncCancelButton.clicked.connect(self.ButtonCancel)
+        # fill ComboBox
+        common.fillComboBox(self, "VNCResolutions", self.vncInputResolution)
+        common.fillComboBox(self, "TigerVNCViewerColorLevel", self.vncInputColor)
+        common.fillComboBoxConnections(self, self.vncInputAlternative)
 
+        if self.connectionname != "":
+            # read connection parameter and fill dialog
+            connection = common.readConnection(self.connectionname)
+            self.vncInputName.setText(self.connectionname)
+            self.vncInputAddress.setText(connection["address"])
+            self.vncInputPort.setText(connection["port"])
+            self.vncInputPassword.setText(connection["password"])
+            self.vncInputParameter.setText(connection["parameter"])
+            # Resolution
+            index = self.vncInputResolution.findText(connection["resolution"],
+                                                     QtCore.Qt.MatchFixedString)
+            if index >= 0:
+                self.vncInputResolution.setCurrentIndex(index)
+            # Color
+            index = self.vncInputColor.findText(connection["color"],
+                                                QtCore.Qt.MatchFixedString)
+            if index >= 0:
+                self.vncInputColor.setCurrentIndex(index)
+            # Autostart
+            autostart = connection["autostart"]
+            if autostart == "yes":
+                self.vncInputAutostart.setChecked(True)
+            # Repeat
+            repeat = connection["repeat"]
+            if repeat == "yes":
+                self.vncInputRepeat.setChecked(True)
+            # Alternative
+            alternative = connection["alternative"]
+            if alternative != "":
+                index = self.vncInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
+                self.vncInputAlternative.setCurrentIndex(index)    
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.vncInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.vncInputIconName.setText(iconname)
+                
+    def ButtonOK(self):
+        logging.info("ButtonOK")
+        error = False
+        if self.vncInputName.text() == "":
+            common.messageDialog("configDialogErrorName")
+            error = True
+        elif " " in self.vncInputName.text():
+            common.messageDialog("configDialogErrorCharacter")
+            error = True
+        elif "[" in self.vncInputName.text():
+            common.messageDialog("configDialogErrorCharacter")
+            error = True
+        elif "]" in self.vncInputName.text():
+            common.messageDialog("configDialogErrorCharacter")
+            error = True
+        elif self.vncInputAddress.text() == "":
+            common.messageDialog("configDialogErrorAddress")
+            error = True
+        elif self.vncInputPort.text() == "":
+            common.messageDialog("configDialogErrorPort")
+            error = True
+        elif common.isNetworkAddress(self.vncInputAddress.text()) == False:
+            error = True
+        elif self.vncInputIcon.isChecked() and self.vncInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
+        name = self.vncInputName.text()
+        if common.existingConnection(name):
+            common.messageDialog("configDialogErrorAddress")
+            error = True
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+        if error == False:
+            values = {}
+            values["typ"] = "vnc"
+            values["address"] = self.vncInputAddress.text()
+            values["port"] = self.vncInputPort.text()
+            values["password"] = self.vncInputPassword.text()
+            values["resolution"] = self.vncInputResolution.currentText()
+            values["color"] = self.vncInputColor.currentText()
+            values["parameter"] = self.vncInputParameter.text()
+            if self.vncInputAutostart.isChecked():
+                values["autostart"] = "yes"
+            else:
+                values["autostart"] = "no"
+            if self.vncInputRepeat.isChecked():
+                values["repeat"] = "yes"
+            else:
+                values["repeat"] = "no"
+                
+            values["alternative"] = str(self.vncInputAlternative.currentText())
+            
+            if self.vncInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.vncInputIconName.text())
+            
+            # delete old connection
+            if self.connectionname != "":
+                common.deleteConnection(self.connectionname)
+                common.deletePasswordFile(self.connectionname)
+            # delete new connection
+            common.deleteConnection(self.vncInputName.text())
+            common.deletePasswordFile(self.vncInputName.text())
+            # make new connection
+            parameter = self.parameterVNC(self.vncInputName.text(), values)
+            common.newConnection(values, parameter, self.vncInputName.text())
+            password = self.vncInputPassword.text()
+            if password != "":
+                self.newPasswordFile(self.vncInputName.text(), password)
+            self.close()
 
+    def ButtonCancel(self):
+        logging.info("ButtonCancel")
+        self.close()
 
-class Ui_DialogTigerVNC(object):
-    def setupUi(self, DialogTigerVNC):
-        DialogTigerVNC.setObjectName("DialogTigerVNC")
-        DialogTigerVNC.resize(646, 510)
-        self.formLayoutWidget = QtWidgets.QWidget(DialogTigerVNC)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 20, 621, 381))
-        self.formLayoutWidget.setObjectName("formLayoutWidget")
-        self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
-        self.formLayout.setContentsMargins(0, 0, 0, 0)
-        self.formLayout.setObjectName("formLayout")
-        self.vncLabelName = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelName.setObjectName("vncLabelName")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.vncLabelName)
-        self.vncInputName = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.vncInputName.setObjectName("vncInputName")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.vncInputName)
-        self.vncLabelAddress = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelAddress.setObjectName("vncLabelAddress")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.vncLabelAddress)
-        self.vncInputAddress = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.vncInputAddress.setObjectName("vncInputAddress")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.vncInputAddress)
-        self.vncLabelPort = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelPort.setObjectName("vncLabelPort")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.vncLabelPort)
-        self.vncInputPort = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.vncInputPort.setObjectName("vncInputPort")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.vncInputPort)
-        self.vncLabelPassword = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelPassword.setObjectName("vncLabelPassword")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.vncLabelPassword)
-        self.vncInputPassword = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.vncInputPassword.setObjectName("vncInputPassword")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.vncInputPassword)
-        self.vncLabelResolution = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelResolution.setObjectName("vncLabelResolution")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.vncLabelResolution)
-        self.vncInputResolution = QtWidgets.QComboBox(self.formLayoutWidget)
-        self.vncInputResolution.setObjectName("vncInputResolution")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.vncInputResolution)
-        self.vncLabelColor = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelColor.setObjectName("vncLabelColor")
-        self.formLayout.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.vncLabelColor)
-        self.vncInputColor = QtWidgets.QComboBox(self.formLayoutWidget)
-        self.vncInputColor.setObjectName("vncInputColor")
-        self.formLayout.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.vncInputColor)
-        self.vncInputAutostart = QtWidgets.QCheckBox(self.formLayoutWidget)
-        self.vncInputAutostart.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.vncInputAutostart.setObjectName("vncInputAutostart")
-        self.formLayout.setWidget(7, QtWidgets.QFormLayout.LabelRole, self.vncInputAutostart)
-        self.vncLabelParameter = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelParameter.setObjectName("vncLabelParameter")
-        self.formLayout.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.vncLabelParameter)
-        self.vncInputParameter = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.vncInputParameter.setObjectName("vncInputParameter")
-        self.formLayout.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.vncInputParameter)
-        self.vncInputRepeat = QtWidgets.QCheckBox(self.formLayoutWidget)
-        self.vncInputRepeat.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.vncInputRepeat.setObjectName("vncInputRepeat")
-        self.formLayout.setWidget(8, QtWidgets.QFormLayout.LabelRole, self.vncInputRepeat)
-        self.vncLabelAlternative = QtWidgets.QLabel(self.formLayoutWidget)
-        self.vncLabelAlternative.setObjectName("vncLabelAlternative")
-        self.formLayout.setWidget(9, QtWidgets.QFormLayout.LabelRole, self.vncLabelAlternative)
-        self.vncInputAlternative = QtWidgets.QComboBox(self.formLayoutWidget)
-        self.vncInputAlternative.setObjectName("vncInputAlternative")
-        self.formLayout.setWidget(9, QtWidgets.QFormLayout.FieldRole, self.vncInputAlternative)
-        self.horizontalLayoutWidget = QtWidgets.QWidget(DialogTigerVNC)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 410, 621, 80))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.vncOKButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.vncOKButton.sizePolicy().hasHeightForWidth())
-        self.vncOKButton.setSizePolicy(sizePolicy)
-        self.vncOKButton.setObjectName("vncOKButton")
-        self.horizontalLayout.addWidget(self.vncOKButton)
-        self.vncCancelButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.vncCancelButton.sizePolicy().hasHeightForWidth())
-        self.vncCancelButton.setSizePolicy(sizePolicy)
-        self.vncCancelButton.setObjectName("vncCancelButton")
-        self.horizontalLayout.addWidget(self.vncCancelButton)
+    def newPasswordFile(self, connectionname, password):
+        logging.info("writePasswordFile")
+        filename = common.getRessource("passwordFile") + "." + connectionname
+        command = common.getRessource("commandVNCPasswd")
+        common.runProgram("echo '" + password + "' | " + command + " " + filename)
 
-        self.retranslateUi(DialogTigerVNC)
-        QtCore.QMetaObject.connectSlotsByName(DialogTigerVNC)
-        DialogTigerVNC.setTabOrder(self.vncInputName, self.vncInputAddress)
-        DialogTigerVNC.setTabOrder(self.vncInputAddress, self.vncInputPort)
-        DialogTigerVNC.setTabOrder(self.vncInputPort, self.vncInputPassword)
-        DialogTigerVNC.setTabOrder(self.vncInputPassword, self.vncInputResolution)
-        DialogTigerVNC.setTabOrder(self.vncInputResolution, self.vncInputColor)
-        DialogTigerVNC.setTabOrder(self.vncInputColor, self.vncInputParameter)
-        DialogTigerVNC.setTabOrder(self.vncInputParameter, self.vncInputAutostart)
-        DialogTigerVNC.setTabOrder(self.vncInputAutostart, self.vncOKButton)
-        DialogTigerVNC.setTabOrder(self.vncOKButton, self.vncCancelButton)
+    def parameterVNC(self, connectionname, values):
+        logging.info("parameterVNC")
+        parameters = common.getRessource("commandVNCViewer")
+        parameters = parameters + " " + values["address"] + ":" + values["port"]
+        if values["password"] != "":
+            parameters = parameters + " " + common.getRessource("TigerVNCViewerPassword") + " " + common.getPasswordFile(connectionname)
 
-    def retranslateUi(self, DialogTigerVNC):
-        _translate = QtCore.QCoreApplication.translate
-        DialogTigerVNC.setWindowTitle(_translate("DialogTigerVNC", "TigerVNC"))
-        self.vncLabelName.setText(_translate("DialogTigerVNC", "Name"))
-        self.vncLabelAddress.setText(_translate("DialogTigerVNC", "Adresse"))
-        self.vncLabelPort.setText(_translate("DialogTigerVNC", "Port"))
-        self.vncLabelPassword.setText(_translate("DialogTigerVNC", "Passwort"))
-        self.vncLabelResolution.setText(_translate("DialogTigerVNC", "Auflösung"))
-        self.vncLabelColor.setText(_translate("DialogTigerVNC", "Farbtiefe"))
-        self.vncInputAutostart.setText(_translate("DialogTigerVNC", "Automatisch starten"))
-        self.vncLabelParameter.setText(_translate("DialogTigerVNC", "Weitere Parameter"))
-        self.vncInputRepeat.setText(_translate("DialogTigerVNC", "Neu verbinden"))
-        self.vncLabelAlternative.setText(_translate("DialogTigerVNC", "Alternativ"))
-        self.vncOKButton.setText(_translate("DialogTigerVNC", "OK"))
-        self.vncCancelButton.setText(_translate("DialogTigerVNC", "Abbrechen"))
+        if values["resolution"] == "FullScreen":
+            parameters = parameters + " " + common.getRessource("TigerVNCViewerFullScreen")
+        else:
+            parameters = parameters + " " + common.getRessource("TigerVNCViewerScreen") + " " + values["resolution"]
+        if values["color"] == "FullColor":
+            parameters = parameters + " " + common.getRessource("TigerVNCViewerFullColor")
+        else:
+            parameters = parameters + " " + common.getRessource("TigerVNCViewerColor") + " " + values["color"]
+        if values["parameter"] != "":
+            parameters = parameters + " " + values["parameter"]
+        logging.info(parameters)
+        return parameters
+
