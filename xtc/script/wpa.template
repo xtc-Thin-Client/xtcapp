@@ -4,5 +4,6 @@ country=DE
 
 network={
     ssid="{ssid}"
+    scan_ssid=1
     psk="{password}"
  }
