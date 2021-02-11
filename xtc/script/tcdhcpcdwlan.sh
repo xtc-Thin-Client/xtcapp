@@ -1,2 +1,2 @@
 #! /bin/sh
-cp $1 /data/thinclient/wlan
+cp $1 /data/thinclient/config/wlan
