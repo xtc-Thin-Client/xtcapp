@@ -37,6 +37,12 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
                                          common.getRessource("configDialogLabelSystemLogin"))
         self.rdpLabelAlternative.setText(
                                          common.getRessource("configDialogLabelAlternative"))    
+        self.rdpInputIcon.setText(
+                                         common.getRessource("configDialogLabelIcon"))
+        self.rdpLabelIconName.setText(
+                                         common.getRessource("configDialogLabelIconName"))
+        self.rdpInputHostalive.setText(common.getRessource("configDialogInputHostalive"))
+        
         #action
         self.rdpOKButton.clicked.connect(self.ButtonOK)
         self.rdpCancelButton.clicked.connect(self.ButtonCancel)
@@ -45,7 +51,8 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
                             self.rdpInputResolution)
         common.fillComboBox(self, "RDPViewerColorLevel", self.rdpInputColor)
         common.fillComboBoxConnections(self, self.rdpInputAlternative)        
-            
+        self.rdpInputHostalive.setChecked(True)
+        
         if self.connectionname != "":
             # read connection parameter and fill dialog
             connection = common.readConnection(self.connectionname)
@@ -74,12 +81,27 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
             systemlogin = connection["systemlogin"]
             if systemlogin == "yes":
                 self.rdpInputSystemLogin.setChecked(True)
+            # host alive
+            self.rdpInputHostalive.setChecked(False)
+            hostalive = connection["hostalive"]
+            if hostalive == "yes":
+                self.rdpInputHostalive.setChecked(True)
             # Alternative
             alternative = connection["alternative"]
             if alternative != "":
                 index = self.rdpInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.rdpInputAlternative.setCurrentIndex(index)    
-
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.rdpInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.rdpInputIconName.setText(iconname)
+                
     def ButtonOK(self):
         logging.info("ButtonOK")
         error = False
@@ -99,6 +121,9 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
             common.messageDialog("configDialogErrorAddress")
             error = True
         elif common.isNetworkAddress(self.rdpInputAddress.text()) is False:
+            error = True
+        elif self.rdpInputIcon.isChecked() and self.rdpInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
             error = True
 
         name = self.rdpInputName.text()
@@ -126,7 +151,19 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
             else:
                 values["systemlogin"] = "no"
 
-            values["alternative"] = str(self.rdpInputAlternative.currentText())
+            if self.rdpInputHostalive.isChecked():
+                values["hostalive"] = "yes"
+            else:
+                values["hostalive"] = "no"
+                
+            values["alternative"] = str(self.rdpInputAlternative.currentText())            
+            
+            if self.rdpInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.rdpInputIconName.text())
             
             # delete old connection
             if self.connectionname != "":
@@ -160,4 +197,6 @@ class dialogRDPUI(QtWidgets.QDialog, dialogrdpui.Ui_DialogRDP):
             parameters = parameters + " " + values["parameter"]
         logging.info(parameters)
         return parameters
+
+
 
