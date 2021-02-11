@@ -29,6 +29,8 @@ class dialogTigerVNCUI(QtWidgets.QDialog, dialogtigervncui.Ui_DialogTigerVNC):
         self.vncInputAutostart.setText(common.getRessource("configDialogLabelAutostart"))
         self.vncInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
         self.vncLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))        
+        self.vncInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.vncLabelIconName.setText(common.getRessource("configDialogLabelIconName"))        
         #action
         self.vncOKButton.clicked.connect(self.ButtonOK)
         self.vncCancelButton.clicked.connect(self.ButtonCancel)
@@ -68,6 +70,16 @@ class dialogTigerVNCUI(QtWidgets.QDialog, dialogtigervncui.Ui_DialogTigerVNC):
             if alternative != "":
                 index = self.vncInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.vncInputAlternative.setCurrentIndex(index)    
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.vncInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.vncInputIconName.setText(iconname)
                 
     def ButtonOK(self):
         logging.info("ButtonOK")
@@ -92,7 +104,10 @@ class dialogTigerVNCUI(QtWidgets.QDialog, dialogtigervncui.Ui_DialogTigerVNC):
             error = True
         elif common.isNetworkAddress(self.vncInputAddress.text()) == False:
             error = True
-
+        elif self.vncInputIcon.isChecked() and self.vncInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
         name = self.vncInputName.text()
         if common.existingConnection(name):
             common.messageDialog("configDialogErrorAddress")
@@ -117,7 +132,14 @@ class dialogTigerVNCUI(QtWidgets.QDialog, dialogtigervncui.Ui_DialogTigerVNC):
                 values["repeat"] = "no"
                 
             values["alternative"] = str(self.vncInputAlternative.currentText())
-
+            
+            if self.vncInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.vncInputIconName.text())
+            
             # delete old connection
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
