@@ -29,6 +29,8 @@ class dialogTightVNCUI(QtWidgets.QDialog, dialogtightvncui.Ui_DialogTightVNC):
         self.vncInputAutostart.setText(common.getRessource("configDialogLabelAutostart"))
         self.vncInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
         self.vncLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))
+        self.vncInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.vncLabelIconName.setText(common.getRessource("configDialogLabelIconName"))        
         #action
         self.vncOKButton.clicked.connect(self.ButtonOK)
         self.vncCancelButton.clicked.connect(self.ButtonCancel)
@@ -68,7 +70,17 @@ class dialogTightVNCUI(QtWidgets.QDialog, dialogtightvncui.Ui_DialogTightVNC):
             if alternative != "":
                 index = self.vncInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.vncInputAlternative.setCurrentIndex(index)    
-
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.vncInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.vncInputIconName.setText(iconname)
+                
     def ButtonOK(self):
         logging.info("ButtonOK")
         error = False
@@ -92,7 +104,10 @@ class dialogTightVNCUI(QtWidgets.QDialog, dialogtightvncui.Ui_DialogTightVNC):
             error = True
         elif common.isNetworkAddress(self.vncInputAddress.text()) == False:
             error = True
-
+        elif self.vncInputIcon.isChecked() and self.vncInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
         name = self.vncInputName.text()
         if common.existingConnection(name):
             common.messageDialog("configDialogErrorAddress")
@@ -118,6 +133,13 @@ class dialogTightVNCUI(QtWidgets.QDialog, dialogtightvncui.Ui_DialogTightVNC):
 
             values["alternative"] = str(self.vncInputAlternative.currentText())
 
+            if self.vncInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.vncInputIconName.text())
+            
             # delete old connection
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
