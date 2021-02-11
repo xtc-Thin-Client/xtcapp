@@ -4,7 +4,7 @@
 # File:    thinclient.py
 # Author:  Volker Matheis
 #
-# Release: 1.6
+# Release: 1.8
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +26,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QThread
+import logging
+import os
+import sys
+import time
+from datetime import datetime, timedelta
 import common
 import connectThread
 import dialoglogin
@@ -38,17 +43,13 @@ import dialogtigervnc
 import dialogtightvnc
 import dialogx2go
 import dialogxdmcp
-import logging
-import os
-import sys
 import thinclientui
-import time
 import vpn
 
 
 class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
     connectedThreads = {}
-
+    
     def __init__(self, configfile):
         super(self.__class__, self).__init__()
         self.setupUi(self)
@@ -60,7 +61,7 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
             sys.exit(1)
 
         # logging
-        loggingfilename = common.getRessourceByName(self.configfile, "loggingFile")
+        loggingfilename = common.getRessourceByName(self.configfile, "loggingFileThinclient")
         debugfile = common.getRessourceByName(self.configfile, "debugSwitch")
         debug = False
         if os.path.isfile(debugfile):
@@ -70,6 +71,8 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         common.getSystemFile(self.configfile)
         common.setRessourceFile(self.configfile)
         systemLanguage = common.getLanguage()
+        # delete connection log file
+        common.deleteConnectionLog()
         # delete existing config file
         common.deleteConfigScript()
         
@@ -83,14 +86,18 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                                         "systemButtonReboot"))
         self.systemButtonShutdown.setText(common.getRessource(
                                           "systemButtonShutdown"))
+        self.connectButtonLog.setText(common.getRessource(
+                                          "connectButtonLog"))
         self.configButtonNew.setText(common.getRessource(
                                      "configButtonNew"))
         self.configButtonEdit.setText(common.getRessource(
                                       "configButtonEdit"))
         self.configButtonDelete.setText(common.getRessource(
                                         "configButtonDelete"))
+        self.networkInputSave.setText(common.getRessource(
+                                           "networkInputSave"))
         self.networkLabelInterface.setText(common.getRessource(
-                                           "networkLabelInterface"))                                        
+                                           "networkLabelInterface"))
         self.networkInputDHCP.setText(common.getRessource("networkInputDHCP"))
         self.networkInputStaticIP.setText(common.getRessource(
                                           "networkInputStaticIP"))
@@ -102,11 +109,12 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                                          "networkLabelGateway"))
         self.networkLabelDNS.setText(common.getRessource("networkLabelDNS"))
         self.networkLabelWlanSSID.setText(common.getRessource("networkLabelWlanSSID"))
+        self.networkInputSearchSSID.setText(common.getRessource("networkInputSearchSSID"))
         self.networkLabelWlanPassword.setText(common.getRessource("networkLabelWlanPassword"))
-        self.networkButtonTransfer.setText(common.getRessource(
-                                           "networkButtonTransfer"))
         self.systemButtonTerminal.setText(common.getRessource(
                                           "systemButtonTerminal"))
+        self.systemInputMinimize.setText(common.getRessource(
+                                         "systemInputMinimize"))
         self.systemLabelLanguage.setText(common.getRessource(
                                          "systemLabelLanguage"))
         self.systemLabelKeyboardLayout.setText(common.getRessource(
@@ -122,44 +130,86 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         self.systemLabelRemotePassword.setText(common.getRessource(
                                                "systemLabelRemotePassword"))
         self.systemLabelRemotePasswordRepeat.setText(common.getRessource(
-                                                     "systemLabelRemotePasswordRepeat"))                                               
+                                                     "systemLabelRemotePasswordRepeat"))
         self.systemInputSSH.setText(common.getRessource(
-                                    "systemInputSSH"))                                               
+                                    "systemInputSSH"))
+        self.systemLabelsshPassword.setText(common.getRessource(
+                                         "systemLabelsshPassword"))
+        self.systemLabelsshPasswordRepeat.setText(common.getRessource(
+                                         "systemLabelsshPasswordRepeat"))        
         self.systemInputUSBAutomount.setText(common.getRessource(
                                     "systemInputUSBAutomount"))                                                       
         self.systemInputOneninedesign.setText(common.getRessource(
                                     "systemInputOneninedesign"))                                               
         self.systemInputArgon1.setText(common.getRessource(
                                     "systemInputArgon1"))                                                       
-        self.systemButtonAssume.setText(common.getRessource(
-                                        "systemButtonAssume"))
         self.systemInputScreensaver.setText(common.getRessource(
                                             "systemScreensaver"))
         self.systemInputMonitorStandby.setText(common.getRessource(
                                                "systemMonitorStandby"))
         self.systemLabelResolution.setText(common.getRessource(
                                            "systemLabelResolution"))
-        #self.systemMonitorGroupBox.setTitle(common.getRessource(
-        #                                  "systemMonitorGroupBox"))                                               
+        self.systemLabelResolution2.setText(common.getRessource(
+                                           "systemLabelResolution2"))
         self.vpnLabelovpn.setText(common.getRessource(
                                   "vpnLabelovpn"))
         self.vpnInputSystemLogin.setText(common.getRessource(
                                          "configDialogLabelSystemLogin"))
         self.vpnInputAutostart.setText(common.getRessource(
-                                       "configDialogLabelAutostart"))                                
+                                       "configDialogLabelAutostart"))
         self.vpnButtonConnect.setText(common.getRessource(
-                                      "vpnButtonConnect"))                                
+                                      "vpnButtonConnect"))
         self.vpnButtonCancel.setText(common.getRessource(
                                      "vpnButtonCancel"))
         self.vpnLabelParameter.setText(common.getRessource(
-                                       "configDialogLabelParameter"))                                
-        self.vpnButtonTransfer.setText(common.getRessource(
-                                       "networkButtonTransfer"))
+                                       "configDialogLabelParameter"))
         self.vpnButtonCondition.setText(common.getRessource(
                                         "vpnButtonCondition"))
         self.vpnButtonCondition.setIcon(QtGui.QIcon(common.getRessource("disconnectIcon")))
         self.vpnButtonFiles.setText(common.getRessource(
                                     "vpnButtonAdditionalFiles"))
+        self.vpnButtonDelete.setText(common.getRessource(
+                                    "vpnButtonDelete"))
+        self.saveButtonSave.setText(common.getRessource(
+                                    "saveButtonSave"))
+        self.systemLabelSound.setText(common.getRessource(
+                                    "systemLabelSound"))
+        self.systemInputMultiMonitorLeft.setText(common.getRessource(
+                                    "systemInputMultiMonitorLeft"))
+        self.systemInputMultiMonitorRight.setText(common.getRessource(
+                                    "systemInputMultiMonitorRight"))
+        self.systemInputMultiMonitorAbove.setText(common.getRessource(
+                                    "systemInputMultiMonitorAbove"))
+        self.systemInputMultiMonitorBelow.setText(common.getRessource(
+                                    "systemInputMultiMonitorBelow"))
+        self.timeInputSave.setText(common.getRessource(
+                                    "timeInputSave"))
+        self.timeInputAuto.setText(common.getRessource(
+                                    "timeInputAuto"))
+        self.timeInputView.setText(common.getRessource(
+                                    "timeInputView"))
+        self.timeLabelTime.setText(common.getRessource(
+                                    "timeLabelTime"))
+        self.timeLabelNTP.setText(common.getRessource(
+                                    "timeLabelNTP"))
+        self.timeLabelActionGroup.setTitle(common.getRessource(
+                                    "timeLabelActionGroup"))
+        self.timeInputAction.setText(common.getRessource(
+                                    "timeInputAction"))
+        self.timeLabelActionAction.setText(common.getRessource(
+                                    "timeLabelActionAction"))
+        self.timeLabelActionTime.setText(common.getRessource(
+                                    "timeLabelActionTime"))
+        self.timeInputActionRepeat.setText(common.getRessource(
+                                    "timeInputActionRepeat"))
+        self.timeLabelActionLast.setText(common.getRessource(
+                                    "timeLabelActionLast"))
+        self.timeLabelTimezone.setText(common.getRessource(
+                                    "timeLabelTimezone"))
+
+        self.timeInputTime.setDisplayFormat("yyyy-MM-dd HH:mm") 
+        # get current time and show
+        self.timeInputTime.setDateTime(QtCore.QDateTime.currentDateTime())
         
         pixmap = QPixmap(common.getRessource("connectIcon"))
         self.systemLabelInfoImage.setPixmap(pixmap)
@@ -169,6 +219,10 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         self.thinClientTab.setTabText(3, common.getRessource("tabNetwork"))
         self.thinClientTab.setTabText(4, common.getRessource("tabVPN"))
         self.thinClientTab.setTabText(5, common.getRessource("tabSystem"))
+        self.thinClientTab.setTabText(6, common.getRessource("tabHardware"))
+        self.thinClientTab.setTabText(7, common.getRessource("tabMonitor"))
+        self.thinClientTab.setTabText(8, common.getRessource("tabTime"))
+        self.thinClientTab.setTabText(9, common.getRessource("tabSave"))
 
         # widget actions
         self.connectButton.clicked.connect(self.connection)
@@ -179,29 +233,26 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         self.configButtonDelete.clicked.connect(self.configDelete)
         self.networkInputDHCP.toggled.connect(self.networkType)
         self.networkInputStaticIP.toggled.connect(self.networkType)
-        self.networkButtonTransfer.clicked.connect(self.networkTransfer)
         self.systemButtonReboot.clicked.connect(self.systemReboot)
         self.systemButtonShutdown.clicked.connect(self.systemShutdown)
+        self.connectButtonLog.clicked.connect(self.connectionLog)
         self.connectList.doubleClicked.connect(self.connection)
         self.configList.doubleClicked.connect(self.configListItem)
         self.systemButtonTerminal.clicked.connect(self.systemTerminal)
-        self.systemButtonAssume.clicked.connect(self.systemAssume)                
         self.vpnButtonFile.clicked.connect(self.vpnGetFile)
-        self.vpnButtonTransfer.clicked.connect(self.vpnTransfer)
+        self.vpnButtonDelete.clicked.connect(self.vpnDeleteFile)
         self.vpnButtonConnect.clicked.connect(self.vpnConnect)
         self.vpnButtonCancel.clicked.connect(self.vpnCancel)
         self.vpnButtonCondition.clicked.connect(self.vpnCondition)
         self.vpnButtonFiles.clicked.connect(self.vpnAdditionalFiles)
         self.systemInputArgon1.toggled.connect(self.systemCaseArgon1)
         self.systemInputOneninedesign.toggled.connect(self.systemCaseOneninedesign)
-        
-        # get system
-        #system = common.runProgramResult(common.getRessource("commandGetSystem"))
-        system = common.getSystem()
-        if system != "PI4":
-            self.systemInputArgon1.setEnabled(False)
-            self.systemInputOneninedesign.setEnabled(False)
-            
+        self.saveButtonSave.clicked.connect(self.save)
+        self.systemInputRemotePassword.textChanged.connect(self.remotePasswordChanged)
+        self.systemInputPassword.textChanged.connect(self.passwordChanged)
+        self.systemInputsshPassword.textChanged.connect(self.sshPasswordChanged)
+        self.networkInputSearchSSID.clicked.connect(self.searchSSID)
+
         # read network        
         interfaces = common.readConnectionInterfaces()
         for interface in interfaces:
@@ -213,7 +264,13 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                                                             QtCore.Qt.MatchFixedString)
                 self.networkInputInterface.setCurrentIndex(index)
             
+        # get wlan devices
+        self.searchSSID()
+            
         values = common.readNetwork(self)
+        if len(values) == 0:
+            self.networkInputSave.setChecked(True)
+            
         dhcp = True
         if "dhcp" in values:
             dhcp = values["dhcp"]
@@ -226,7 +283,12 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         if "dns" in values:
             self.networkInputDNS.setText(values["dns"])
         if "ssid" in values:
-            self.networkInputWlanSSID.setText(values["ssid"])
+            index = self.networkInputWlanSSID.findText(values["ssid"], QtCore.Qt.MatchFixedString)
+            if index >= 0:
+                self.networkInputWlanSSID.setCurrentIndex(index)
+            else:
+                if values["ssid"] != "":
+                    self.networkInputWlanSSID.addItem(values["ssid"])
         if "password" in values:
             self.networkInputWlanPassword.setText(values["password"])
         
@@ -240,6 +302,7 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         # fill ComboBox with connection types
         common.fillComboBox(self, "configConnectionType",
                             self.configInputConnectionType)
+        
         # Get Language
         common.fillComboBox(self, "language", self.systemInputLanguage)
         if systemLanguage == "DE":
@@ -257,46 +320,156 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         if index >= 0:
             self.systemInputKeyboardLayout.setCurrentIndex(index)
 
+        # Get Resolution List
+        resolution, resolution2 = common.getResolutionList()
+        common.fillComboBoxList(self, resolution, self.systemInputResolution)
+        common.fillComboBoxList(self, resolution2, self.systemInputResolution2)
+        
+        # get orientation 
+        orientation = common.getOrientationMonitor2()
+        if orientation == "left":
+            self.systemInputMultiMonitorLeft.setChecked(True)
+        if orientation == "right":
+            self.systemInputMultiMonitorRight.setChecked(True)
+        if orientation == "above":
+            self.systemInputMultiMonitorAbove.setChecked(True)
+        if orientation == "below":
+            self.systemInputMultiMonitorBelow.setChecked(True)
+
         # Check VNC
         if common.isRemoteVNC():
             self.systemInputRemoteVNC.setChecked(True)
         # Check SSH
         if common.isRemoteSSH():
             self.systemInputSSH.setChecked(True)
+            self.systemInputsshPassword.setText("1111111111")
         # check USB automount
         if common.isUSBAutomount():
             self.systemInputUSBAutomount.setChecked(True)
+
+        # set time parameter
+        if common.isDateShow():
+            self.timeInputView.setChecked(True)
+        # list time zones
+        values = common.getTimezones()
+        common.fillComboBoxList(self, values, self.timeInputTimezone)
+        # fill action
+        common.fillComboBox(self, "timeActions", self.timeInputActionAction)
+        
+        # is date and time showing?
+        value = common.isDateShow()
+        if value:
+            self.timeInputView.setChecked(True)
             
+        # get time parameter
+        timeValues = common.readTime()
+        for value in timeValues:
+            if "save" in value:
+                if timeValues["save"] == "no":
+                    self.timeInputSave.setChecked(True)
+            if "automatic" in value:
+                if timeValues["automatic"] == "yes":
+                    self.timeInputAuto.setChecked(True)
+            if "ntp" in value:
+                self.timeInputNTP.setText(timeValues["ntp"])
+            if "zone" in value:
+                index = self.timeInputTimezone.findText(timeValues["zone"], QtCore.Qt.MatchFixedString)
+                if index < 0:
+                    index = 0
+                self.timeInputTimezone.setCurrentIndex(index)
+            if "time" in value:
+                time = datetime.strptime(timeValues["time"], "%Y-%m-%d %H:%M")
+                self.timeInputTime.setDateTime(time)
+            if "execute" in value:
+                if timeValues["execute"] == "yes":
+                    self.timeInputAction.setChecked(True)
+            if "repeat" in value:
+                if timeValues["repeat"] == "yes":
+                    self.timeInputActionRepeat.setChecked(True)
+            if "action" in value:
+                index = self.timeInputActionAction.findText(timeValues["action"], QtCore.Qt.MatchFixedString)
+                self.timeInputActionAction.setCurrentIndex(index)
+            if "execat" in value:
+                if timeValues["execat"].startswith("+"):
+                    self.timeInputActionTime.setText(timeValues["execat"])
+                else:
+                    if timeValues["execat"] != "":
+                        time = datetime.strptime(timeValues["execat"], "%Y-%m-%d %H:%M")
+                        strtime = time.strftime("%Y-%m-%d %H:%M")
+                        self.timeInputActionTime.setText(strtime)
+            if "last" in value:
+                self.timeInputActionLast.setText(timeValues["last"])
+        
         # hide tabs when in user mode
         startadmin = True
         autostartvpn = False
         values = common.readSystem()
+        self.systemInputStartAdmin.setChecked(True)
         if "startAdmin" in values:
-            if values["startAdmin"] == "yes":
-                self.systemInputStartAdmin.setChecked(True)
             if values["startAdmin"] == "no":
                 startadmin = False
+                self.systemInputStartAdmin.setChecked(False)
         if not "adminPassword" in values:
             startadmin = True
         if "adminPassword" in values:
+            self.systemInputPassword.setText(values["adminPassword"])
             if values["adminPassword"] == "":
                 startadmin = True
-        values = vpn.readVPN(self)
-        if "ovpn" in values:
-            self.vpnInputovpn.setText(values["ovpn"])
-        if "parametervpn" in values:
-            self.vpnInputParameter.setText(values["parametervpn"])
-        if "systemlogin" in values:
-            if values["systemlogin"] == "yes":
+        # minimize dialog?
+        if "startMinimized" in values:
+            if values["startMinimized"] == "yes":
+                self.systemInputMinimize.setChecked(True)
+                self.showMinimized()
+        # save network
+        if "networkSave" in values:
+            if values["networkSave"] == "no":
+                self.networkInputSave.setChecked(True)
+                
+        # get current resolution
+        resolution, resolution2 = common.getResolution()
+        # set resolution monitor 1
+        if "resolution" in values:
+            if values["resolution"] == "auto":
+                resolution = "auto"
+        index = self.systemInputResolution.findText(resolution,
+                                                        QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.systemInputResolution.setCurrentIndex(index)
+        else:
+            if resolution != "":
+                self.systemInputResolution.addItem(resolution)
+                
+        # set resolution monitor 2
+        if "resolution2" in values:
+            if values["resolution2"] == "auto":
+                resolution2 = "auto"
+
+        index = self.systemInputResolution2.findText(resolution2,
+                                                         QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.systemInputResolution2.setCurrentIndex(index)
+        else:
+            if resolution != "":
+                self.systemInputResolution2.addItem(resolution2)
+            
+        # vpn
+        vpnvalues = vpn.readVPN(self)
+        if "ovpn" in vpnvalues:
+            self.vpnInputovpn.setText(vpnvalues["ovpn"])
+        if "parametervpn" in vpnvalues:
+            self.vpnInputParameter.setText(vpnvalues["parametervpn"])
+        if "systemlogin" in vpnvalues:
+            if vpnvalues["systemlogin"] == "yes":
                 self.vpnInputSystemLogin.setChecked(True)                
-        if "autostartvpn" in values:
-            if values["autostartvpn"] == "yes":
+        if "autostartvpn" in vpnvalues:
+            if vpnvalues["autostartvpn"] == "yes":
                 self.vpnInputAutostart.setChecked(True)
                 autostartvpn = True                            
         if startadmin is True:
             self.connectButtonExtended.setEnabled(False)
         else:
-            common.enableTabs(self, False)        
+            common.enableTabs(self, False)
+                        
         # get screensaver state
         if common.isScreensaver():
             self.systemInputScreensaver.setChecked(True)
@@ -319,8 +492,26 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         if common.isArgon1():
             self.systemInputArgon1.setChecked(True)
         else:
-            self.systemInputArgon1.setChecked(False)        
+            self.systemInputArgon1.setChecked(False)
             
+        system = common.getSystemTyp()
+        if system != "PI4":
+            self.systemInputArgon1.setEnabled(False)
+            self.systemInputOneninedesign.setEnabled(False)
+            
+        # get sound cards
+        values = common.getSoundCards()
+        common.fillComboBoxList(self, values, self.systemInputSound)
+        soundcard = common.getCurrentSoundCard()
+        stringsplit = soundcard.split(" ")
+        cardnumber = stringsplit[0].strip() + " "
+        
+        for index in range(self.systemInputSound.count()):
+            value = self.systemInputSound.itemText(index)
+            if value.startswith(cardnumber):
+                self.systemInputSound.setCurrentIndex(index)
+                break
+        
         # set title
         self.setWindowTitle(common.getRessource("dialogTitle"))
         # Select first Tab
@@ -329,20 +520,24 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
         if autostartvpn:
             parameter = None
             systemlogin = None
-            if "parametervpn" in values:
-                parameter = values["paramtervpn"]
+            if "parametervpn" in vpnvalues:
+                parameter = vpnvalues["parametervpn"]
             systemlogin = None
-            if "systemlogin" in values:
-                systemlogin = values["systemlogin"]
-            vpn.autostartvpn(self, values["ovpn"], parameter, systemlogin)
+            if "systemlogin" in vpnvalues:
+                systemlogin = vpnvalues["systemlogin"]
+            vpn.autostartvpn(self, vpnvalues["ovpn"], parameter, systemlogin)
         # autostart connections
         self.autostart()
         # read existing connections
         self.fillListWidgets()
-        # get resolution
-        resolution = common.getResolution()
-        self.systemInputResolution.setText(resolution)
+        # set passwort to "not changed"
+        self.RemotePasswordChanged = False
+        self.PasswordChanged = False
+        self.sshPasswordChanged = False
 
+    def changeText(self, index):
+        self.text.setText(self.combo.itemText(index))
+        
     def closeEvent(self, event):
         logging.info("close")
         common.systemShutdown(self)
@@ -350,6 +545,15 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
 
     def fillListWidgets(self):
         common.fillListWidgets(self, self.connectedThreads)
+
+    def remotePasswordChanged(self):
+        self.RemotePasswordChanged = True
+        
+    def passwordChanged(self):
+        self.PasswordChanged = True
+        
+    def sshPasswordChanged(self):
+        self.sshPasswordChanged = True
 
 # Connection
     def connectionExtended(self):
@@ -416,7 +620,11 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                         command = command.replace(common.getRessource("commandPlaceholderPassword"), dialogLogin.getPassword())
                         
                 if result:
-                    result = common.isHostAlive(values["address"])
+                    if "hostalive" in values:
+                        if values["hostalive"] == "yes":
+                            result = common.isHostAlive(values["address"])
+                    else:
+                        result = common.isHostAlive(values["address"])
             
                 if result:
                     break
@@ -437,11 +645,12 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                            
             if result:            
                 # connect to Desktop 1
-                commandwm = common.getRessource("commandWMDesktop")            
+                commandwm = common.getRessource("commandWMDesktop")
                 command = commandwm + " " + command
                 logging.info(command)
+                connectionlog = common.getRessource("fileConnectionLog")
                 # run connection as thread
-                runconnect = connectThread.connectThread(command, connectionname)
+                runconnect = connectThread.connectThread(command, connectionname, connectionlog)
                 runconnect.threadCancel.connect(self.connectThreadCancel)
                 #self.connect(runconnect, QtCore.SIGNAL(
                 #             "connectThreadCancel(QString)"), self.connectThreadCancel)
@@ -593,6 +802,7 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
                 self.fillListWidgets()
 
 # Network
+# -------
     def networkType(self):
         if self.networkInputDHCP.isChecked():
             self.networkInputAddress.setEnabled(False)
@@ -608,14 +818,8 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
             self.networkInputSubnetmask.setEnabled(True)
             logging.info("networkStaticIP")
 
-    def networkTransfer(self):
-        logging.info("networkTransfer")
-        if self.networkInputDHCP.isChecked():
-            common.networkWriteDHCP(self)
-        else:
-            common.networkWriteStaticIP(self)
-    
 # System
+# ------
     def systemTerminal(self):
         logging.info("systemTerminal")
         common.systemTerminal()
@@ -628,103 +832,25 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
     def systemCaseOneninedesign(self):
         logging.info("systemCaseTypeOneninedesign")    
         if self.systemInputOneninedesign.isChecked():
-            self.systemInputArgon1.setChecked(False)        
+            self.systemInputArgon1.setChecked(False)
+
+    def searchSSID(self):
+        logging.info("searchSSID")
+        values = common.getWlan()
+        self.networkInputWlanSSID.clear()
+        common.fillComboBoxList(self, values, self.networkInputWlanSSID)
         
-    def systemAssume(self):
-        logging.info("systemAssume")
-        values = {}
-        password = self.systemInputPassword.text()
-        passwordrepeat = self.systemInputPasswordRepeat.text()
-        if password != "" or passwordrepeat != "":
-            if password == passwordrepeat:
-                values["adminPassword"] = common.convertPassword(password)
-            else:
-                common.messageDialog("systemPasswordComparisonError")
-                return
-
-        if self.systemInputStartAdmin.isChecked():
-            values["startAdmin"] = "yes"
-        else:
-            values["startAdmin"] = "no"
-
-        if self.systemInputRemoteVNC.isChecked():
-            password = self.systemInputRemotePassword.text()
-            passwordrepeat = self.systemInputRemotePasswordRepeat.text()
-
-            if password == "" or passwordrepeat == "":
-                common.messageDialog("systemRemotePasswordError")
-                return             
-            
-            if password == passwordrepeat:
-                common.remoteVNC(True, self)
-            else:
-                common.messageDialog("systemPasswordComparisonError")                
-                return
-        else:
-            common.remoteVNC(False, self)
-            
-        if self.systemInputSSH.isChecked():
-            common.remoteSSH(True)
-        else:
-            common.remoteSSH(False)
-                    
-        values["language"] = self.systemInputLanguage.currentText()
-        values["keyboardLayout"] = self.systemInputKeyboardLayout.currentText()
-        common.writeSystem(values)
-        common.writeKeyboardLayout(values["keyboardLayout"])
-        # reboot system
-        result = common.confirmDialog(self,
-                                      common.getRessource("systemShutdownTitle"),
-                                      common.getRessource("systemAssumeMessage"))
-                                      
-        common.deleteConfigScript()
-        if self.systemInputScreensaver.isChecked():
-            common.setScreensaver("on")
-        else:
-            common.setScreensaver("off")
-        if self.systemInputMonitorStandby.isChecked():
-            common.setMonitorStandby("on")
-        else:
-            common.setMonitorStandby("off")
-            
-        if result:       
-            common.deleteConfigScript()
-            if self.systemInputScreensaver.isChecked():
-                common.setScreensaver("on")
-            else:
-                common.setScreensaver("off")
-                
-            if self.systemInputMonitorStandby.isChecked():
-                common.setMonitorStandby("on")
-            else:
-                common.setMonitorStandby("off")
-            common.setResolution(self.systemInputResolution.text())
-            
-            if self.systemInputUSBAutomount.isChecked():
-                common.setUSBAutomount("on")
-            else:
-                common.setUSBAutomount("off")
-                
-            common.setResolution(self.systemInputResolution.text())            
-            if self.systemInputOneninedesign.isChecked():
-                common.setOneninedesign("on")
-            else:
-                common.setOneninedesign("off")
-                
-            if self.systemInputArgon1.isChecked():
-                common.setArgon1("on")
-            else:
-                common.setArgon1("off")            
-
-            common.runProgram(common.getRessource("commandReboot"))
-
     def systemReboot(self):
         common.systemReboot(self)
 
     def systemShutdown(self):
         common.systemShutdown(self)
+     
+    def connectionLog(self):
+        common.connectionLog(self)
         
 # vpn
+# ---
     def vpnGetFile(self):
         logging.info("vpnGetFile")
         vpn.vpnGetFile(self)
@@ -754,8 +880,218 @@ class thinClientUI(QtWidgets.QMainWindow, thinclientui.Ui_MainWindow):
     def vpnAdditionalFiles(self): 
         logging.info("vpnAdditionalFiles")
         vpn.vpnAdditionalFiles(self)
+
+    def vpnDeleteFile(self): 
+        logging.info("vpnDeleteFile")
+        vpn.vpnDeleteFile(self)
+
+# save and restart
+# ----------------
+    def save(self):
+        logging.info("save and restart")
+        values = {}
+        # check password
+        if self.systemInputStartAdmin.isChecked() == False:
+            password = self.systemInputPassword.text()
+            values["adminPassword"] = password
+            passwordrepeat = self.systemInputPasswordRepeat.text()
+            if password == "":
+                common.messageDialog("systemRemotePasswordError")
+                return            
+            if self.PasswordChanged:
+                if password == passwordrepeat:
+                    values["adminPassword"] = common.convertPassword(password)
+                else:
+                    common.messageDialog("systemPasswordComparisonError")
+                    return
+
+        # check remote vnc password
+        if self.systemInputRemoteVNC.isChecked() and self.RemotePasswordChanged:
+            vncpassword = self.systemInputRemotePassword.text()
+            passwordrepeat = self.systemInputRemotePasswordRepeat.text()
+            if vncpassword == "":
+                common.messageDialog("systemRemotePasswordError")
+                return            
+            if vncpassword != passwordrepeat:
+                common.messageDialog("systemPasswordComparisonError")
+                return
+            
+        # check ssh password
+        if self.systemInputSSH.isChecked() and self.sshPasswordChanged:
+            sshpassword = self.systemInputsshPassword.text()
+            passwordrepeat = self.systemInputsshPasswordRepeat.text()
+            if sshpassword == "":
+                common.messageDialog("systemsshPasswordError")
+                return            
+            if sshpassword != passwordrepeat:
+                common.messageDialog("systemPasswordComparisonError")
+                return
+                
+        # action time is string, convert to datetime or hour:minute
+        value = self.timeInputActionTime.text()
+        if value != "":
+            # hour:minute
+            if value.startswith("+"):
+                value = value.replace("+", "")
+                try:
+                    time = datetime.strptime(value, "%H:%M")
+                except ValueError as error:
+                    common.messageDialog("timeActionError")
+                    return
+            else:
+                try:
+                    time = datetime.strptime(value, "%Y-%m-%d %H:%M")
+                except ValueError as error:
+                    common.messageDialog("timeActionError")
+                    return
+            
+        # network
+        if self.networkInputSave.isChecked() == False:
+            networkvalues = {}
+            networkvalues["connection"] = self.networkInputInterface.currentText()
+            networkvalues["address"] = self.networkInputAddress.text()
+            networkvalues["subnetmask"] = self.networkInputSubnetmask.text()
+            networkvalues["gateway"] = self.networkInputGateway.text()
+            networkvalues["dns"] = self.networkInputDNS.text()
+            networkvalues["ssid"] = self.networkInputWlanSSID.currentText()
+            networkvalues["password"] = self.networkInputWlanPassword.text()
+            
+            if self.networkInputDHCP.isChecked():
+                common.networkWriteDHCP(networkvalues)
+            else:
+                result = common.networkWriteStaticIP(networkvalues)
+                if not result:
+                    return
+           
+        # vpn
+        vpn.vpnTransfer(self)
         
+        # system
+        if self.systemInputStartAdmin.isChecked():
+            values["startAdmin"] = "yes"
+        else:
+            values["startAdmin"] = "no"
+
+        if self.systemInputRemoteVNC.isChecked():
+            if self.RemotePasswordChanged:
+                common.remoteVNC(True, vncpassword)
+        else:
+            common.remoteVNC(False, None)
+            
+        if self.systemInputSSH.isChecked():
+            if self.sshPasswordChanged:
+                common.remoteSSH(True, self.systemInputsshPassword.text())
+        else:
+            common.remoteSSH(False, None)
         
+        values["resolution"] = self.systemInputResolution.currentText()
+        values["resolution2"] = self.systemInputResolution2.currentText()
+        
+        orientation = "left"
+        if self.systemInputMultiMonitorLeft.isChecked():
+            orientation = "left"
+        if self.systemInputMultiMonitorRight.isChecked():
+            orientation = "right"
+        if self.systemInputMultiMonitorAbove.isChecked():
+            orientation = "above"
+        if self.systemInputMultiMonitorBelow.isChecked():
+            orientation = "below"
+            
+        common.setMultiMonitor(True, orientation)
+                    
+        values["language"] = self.systemInputLanguage.currentText()
+        values["keyboardLayout"] = self.systemInputKeyboardLayout.currentText()
+        
+        values["startMinimized"] = "no"
+        if self.systemInputMinimize.isChecked():
+            values["startMinimized"] = "yes"
+        
+        values["networkSave"] = "yes"
+        if self.networkInputSave.isChecked():
+            values["networkSave"] = "no"
+        # write system file
+        common.writeSystem(values)
+        
+        common.writeKeyboardLayout(values["keyboardLayout"])
+        # write system file        
+        common.deleteConfigScript()
+        
+        if self.systemInputScreensaver.isChecked():
+            common.setScreensaver("on")
+        else:
+            common.setScreensaver("off")
+        if self.systemInputMonitorStandby.isChecked():
+            common.setMonitorStandby("on")
+        else:
+            common.setMonitorStandby("off")
+            
+        common.deleteConfigScript()
+        if self.systemInputScreensaver.isChecked():
+            common.setScreensaver("on")
+        else:
+            common.setScreensaver("off")
+            
+        if self.systemInputMonitorStandby.isChecked():
+            common.setMonitorStandby("on")
+        else:
+            common.setMonitorStandby("off")
+            
+        common.setResolution(self.systemInputResolution.currentText())
+        
+        if self.systemInputUSBAutomount.isChecked():
+            common.setUSBAutomount("on")
+        else:
+            common.setUSBAutomount("off")
+            
+        if self.systemInputOneninedesign.isChecked():
+            common.setOneninedesign("on")
+        else:
+            common.setOneninedesign("off")
+            
+        if self.systemInputArgon1.isChecked():
+            common.setArgon1("on")
+        else:
+            common.setArgon1("off")            
+                
+        common.setSoundCard(self.systemInputSound.currentText())
+
+        # write time
+        values = {}
+        values["save"] = "yes"
+        if self.timeInputSave.isChecked():
+            values["save"] = "no"
+        values["automatic"] = "no"
+        if self.timeInputAuto.isChecked():
+            values["automatic"] = "yes"
+        values["ntp"] = self.timeInputNTP.text()
+        values["zone"] = self.timeInputTimezone.currentText()
+        values["repeat"] = "no"
+        if self.timeInputActionRepeat.isChecked():
+            values["repeat"] = "yes"
+        values["time"] = self.timeInputTime.text()
+        values["execute"] = "no"
+        if self.timeInputAction.isChecked():
+            values["execute"] = "yes"
+        values["action"] = self.timeInputActionAction.currentText()
+        values["execat"] = self.timeInputActionTime.text()
+        common.writeTime(values)
+        
+        # write time temp. file for save and reboot
+        values = {}
+        values["show"] = "no"
+        if self.timeInputView.isChecked():
+            values["show"] = "yes"
+        common.writeTimeTemp(values)
+        
+        # reboot system
+        result = common.confirmDialog(self,
+                                      common.getRessource("systemShutdownTitle"),
+                                      common.getRessource("systemAssumeMessage"))
+        if result:
+            command = common.getRessource("commandReboot")
+            common.runProgram(command)
+
+
 def main():
     configfile = ""
     if len(sys.argv) > 1:
