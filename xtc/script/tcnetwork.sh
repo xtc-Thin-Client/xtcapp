@@ -1,2 +1,2 @@
 #! /bin/sh
-cp $1 /data/thinclient/interfaces
+cp $1 /data/thinclient/config/interfaces
