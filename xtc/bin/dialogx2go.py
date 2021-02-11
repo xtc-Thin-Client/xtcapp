@@ -30,6 +30,8 @@ class dialogx2goUI(QtWidgets.QDialog, dialogx2goui.Ui_Dialogx2go):
         self.x2goInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
         self.x2goLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))
         self.x2goInputSystemLogin.setText(common.getRessource("configDialogLabelSystemLogin"))
+        self.x2goInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.x2goLabelIconName.setText(common.getRessource("configDialogLabelIconName"))        
         # fill ComboBox
         common.fillComboBox(self, "x2goResolutions", self.x2goInputResolution)
         common.fillComboBox(self, "x2goKeyboardLayout", self.x2goInputKeyboard)
@@ -79,7 +81,17 @@ class dialogx2goUI(QtWidgets.QDialog, dialogx2goui.Ui_Dialogx2go):
             if alternative != "":
                 index = self.x2goInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.x2goInputAlternative.setCurrentIndex(index)    
-
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.x2goInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.x2goInputIconName.setText(iconname)
+                
     def ButtonOK(self):
         logging.info("ButtonOK")
         error = False
@@ -89,7 +101,10 @@ class dialogx2goUI(QtWidgets.QDialog, dialogx2goui.Ui_Dialogx2go):
         elif self.x2goInputAddress.text() == "":
             common.messageDialog("configDialogErrorAddress")
             error = True
-
+        elif self.x2goInputIcon.isChecked() and self.x2goInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
         name = self.x2goInputName.text()
         if common.existingConnection(name):
             common.messageDialog("configDialogErrorAddress")
@@ -122,7 +137,14 @@ class dialogx2goUI(QtWidgets.QDialog, dialogx2goui.Ui_Dialogx2go):
                 values["systemlogin"] = "no"
                 
             values["alternative"] = str(self.x2goInputAlternative.currentText())
-
+            
+            if self.x2goInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.x2goInputIconName.text())
+            
             # delete old connection
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
