@@ -14,17 +14,20 @@ class connectThread(QtCore.QThread):
     process = None
     threadCancel = pyqtSignal(str)
 
-    def __init__(self, command, name):
+    def __init__(self, command, name, connectionlog):
         super(connectThread, self).__init__()
         self.command = command
         self.name = name
+        self.connectionlog = connectionlog
         
     def run(self):
         try:
             global result
             logging.info(self.command)
+            #self.process = subprocess.Popen(self.command, shell=True,
+            #stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             self.process = subprocess.Popen(self.command, shell=True,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout=subprocess.PIPE, stderr=open(self.connectionlog, "a"))
             self.pid = self.process.pid
             self.process.communicate()
             logging.info("end")
