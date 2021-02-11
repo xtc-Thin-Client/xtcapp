@@ -113,6 +113,26 @@
     <item row="8" column="1">
      <widget class="QComboBox" name="rdesktopInputAlternative"/>
     </item>
+    <item row="9" column="0">
+     <widget class="QCheckBox" name="rdesktopInputIcon">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Symbol erstellen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="rdesktopLabelIconName">
+      <property name="text">
+       <string>Bezeichnung Symbol</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLineEdit" name="rdesktopInputIconName"/>
+    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
@@ -154,6 +174,21 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>rdesktopInputName</tabstop>
+  <tabstop>rdesktopInputAddress</tabstop>
+  <tabstop>rdesktopInputResolution</tabstop>
+  <tabstop>rdesktopInputColor</tabstop>
+  <tabstop>rdesktopInputParameter</tabstop>
+  <tabstop>rdesktopInputSystemLogin</tabstop>
+  <tabstop>rdesktopInputAutostart</tabstop>
+  <tabstop>rdesktopInputRepeat</tabstop>
+  <tabstop>rdesktopInputAlternative</tabstop>
+  <tabstop>rdesktopInputIcon</tabstop>
+  <tabstop>rdesktopInputIconName</tabstop>
+  <tabstop>rdesktopOKButton</tabstop>
+  <tabstop>rdesktopCancelButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
