@@ -36,13 +36,15 @@ class Ui_DialogPassword(object):
         self.passwordLabelPassword.setObjectName("passwordLabelPassword")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.passwordLabelPassword)
         self.passwordInputPassword = QtWidgets.QLineEdit(self.formLayoutWidget)
-        self.passwordInputPassword.setInputMethodHints(QtCore.Qt.ImhNone)
+        self.passwordInputPassword.setInputMethodHints(QtCore.Qt.ImhHiddenText|QtCore.Qt.ImhNoAutoUppercase|QtCore.Qt.ImhNoPredictiveText|QtCore.Qt.ImhSensitiveData)
         self.passwordInputPassword.setEchoMode(QtWidgets.QLineEdit.Password)
         self.passwordInputPassword.setObjectName("passwordInputPassword")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.passwordInputPassword)
 
         self.retranslateUi(DialogPassword)
         QtCore.QMetaObject.connectSlotsByName(DialogPassword)
+        DialogPassword.setTabOrder(self.passwordInputPassword, self.passwordOKButton)
+        DialogPassword.setTabOrder(self.passwordOKButton, self.passwordCancelButton)
 
     def retranslateUi(self, DialogPassword):
         _translate = QtCore.QCoreApplication.translate
