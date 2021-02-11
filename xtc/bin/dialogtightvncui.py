@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dialogtigervnc.ui'
+# Form implementation generated from reading ui file 'dialogtightvnc.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -10,12 +10,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_DialogTigerVNC(object):
-    def setupUi(self, DialogTigerVNC):
-        DialogTigerVNC.setObjectName("DialogTigerVNC")
-        DialogTigerVNC.resize(646, 510)
-        self.formLayoutWidget = QtWidgets.QWidget(DialogTigerVNC)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 20, 621, 431))
+class Ui_DialogTightVNC(object):
+    def setupUi(self, DialogTightVNC):
+        DialogTightVNC.setObjectName("DialogTightVNC")
+        DialogTightVNC.resize(646, 510)
+        self.formLayoutWidget = QtWidgets.QWidget(DialogTightVNC)
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 20, 621, 422))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -86,8 +86,8 @@ class Ui_DialogTigerVNC(object):
         self.vncInputIconName = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.vncInputIconName.setObjectName("vncInputIconName")
         self.formLayout.setWidget(11, QtWidgets.QFormLayout.FieldRole, self.vncInputIconName)
-        self.horizontalLayoutWidget = QtWidgets.QWidget(DialogTigerVNC)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 460, 621, 41))
+        self.horizontalLayoutWidget = QtWidgets.QWidget(DialogTightVNC)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 449, 621, 41))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -109,36 +109,36 @@ class Ui_DialogTigerVNC(object):
         self.vncCancelButton.setObjectName("vncCancelButton")
         self.horizontalLayout.addWidget(self.vncCancelButton)
 
-        self.retranslateUi(DialogTigerVNC)
-        QtCore.QMetaObject.connectSlotsByName(DialogTigerVNC)
-        DialogTigerVNC.setTabOrder(self.vncInputName, self.vncInputAddress)
-        DialogTigerVNC.setTabOrder(self.vncInputAddress, self.vncInputPort)
-        DialogTigerVNC.setTabOrder(self.vncInputPort, self.vncInputPassword)
-        DialogTigerVNC.setTabOrder(self.vncInputPassword, self.vncInputResolution)
-        DialogTigerVNC.setTabOrder(self.vncInputResolution, self.vncInputColor)
-        DialogTigerVNC.setTabOrder(self.vncInputColor, self.vncInputParameter)
-        DialogTigerVNC.setTabOrder(self.vncInputParameter, self.vncInputAutostart)
-        DialogTigerVNC.setTabOrder(self.vncInputAutostart, self.vncInputRepeat)
-        DialogTigerVNC.setTabOrder(self.vncInputRepeat, self.vncInputAlternative)
-        DialogTigerVNC.setTabOrder(self.vncInputAlternative, self.vncInputIcon)
-        DialogTigerVNC.setTabOrder(self.vncInputIcon, self.vncInputIconName)
-        DialogTigerVNC.setTabOrder(self.vncInputIconName, self.vncOKButton)
-        DialogTigerVNC.setTabOrder(self.vncOKButton, self.vncCancelButton)
+        self.retranslateUi(DialogTightVNC)
+        QtCore.QMetaObject.connectSlotsByName(DialogTightVNC)
+        DialogTightVNC.setTabOrder(self.vncInputName, self.vncInputAddress)
+        DialogTightVNC.setTabOrder(self.vncInputAddress, self.vncInputPort)
+        DialogTightVNC.setTabOrder(self.vncInputPort, self.vncInputPassword)
+        DialogTightVNC.setTabOrder(self.vncInputPassword, self.vncInputResolution)
+        DialogTightVNC.setTabOrder(self.vncInputResolution, self.vncInputColor)
+        DialogTightVNC.setTabOrder(self.vncInputColor, self.vncInputParameter)
+        DialogTightVNC.setTabOrder(self.vncInputParameter, self.vncInputAutostart)
+        DialogTightVNC.setTabOrder(self.vncInputAutostart, self.vncInputRepeat)
+        DialogTightVNC.setTabOrder(self.vncInputRepeat, self.vncInputAlternative)
+        DialogTightVNC.setTabOrder(self.vncInputAlternative, self.vncInputIcon)
+        DialogTightVNC.setTabOrder(self.vncInputIcon, self.vncInputIconName)
+        DialogTightVNC.setTabOrder(self.vncInputIconName, self.vncOKButton)
+        DialogTightVNC.setTabOrder(self.vncOKButton, self.vncCancelButton)
 
-    def retranslateUi(self, DialogTigerVNC):
+    def retranslateUi(self, DialogTightVNC):
         _translate = QtCore.QCoreApplication.translate
-        DialogTigerVNC.setWindowTitle(_translate("DialogTigerVNC", "TigerVNC"))
-        self.vncLabelName.setText(_translate("DialogTigerVNC", "Name"))
-        self.vncLabelAddress.setText(_translate("DialogTigerVNC", "Adresse"))
-        self.vncLabelPort.setText(_translate("DialogTigerVNC", "Port"))
-        self.vncLabelPassword.setText(_translate("DialogTigerVNC", "Passwort"))
-        self.vncLabelResolution.setText(_translate("DialogTigerVNC", "Auflösung"))
-        self.vncLabelColor.setText(_translate("DialogTigerVNC", "Farbtiefe"))
-        self.vncInputAutostart.setText(_translate("DialogTigerVNC", "Automatisch starten"))
-        self.vncLabelParameter.setText(_translate("DialogTigerVNC", "Weitere Parameter"))
-        self.vncInputRepeat.setText(_translate("DialogTigerVNC", "Neu verbinden"))
-        self.vncLabelAlternative.setText(_translate("DialogTigerVNC", "Alternativ"))
-        self.vncInputIcon.setText(_translate("DialogTigerVNC", "Symbol erstellen"))
-        self.vncLabelIconName.setText(_translate("DialogTigerVNC", "Bezeichnung Symbol"))
-        self.vncOKButton.setText(_translate("DialogTigerVNC", "OK"))
-        self.vncCancelButton.setText(_translate("DialogTigerVNC", "Abbrechen"))
+        DialogTightVNC.setWindowTitle(_translate("DialogTightVNC", "TightVNC"))
+        self.vncLabelName.setText(_translate("DialogTightVNC", "Name"))
+        self.vncLabelAddress.setText(_translate("DialogTightVNC", "Adresse"))
+        self.vncLabelPort.setText(_translate("DialogTightVNC", "Port"))
+        self.vncLabelPassword.setText(_translate("DialogTightVNC", "Passwort"))
+        self.vncLabelResolution.setText(_translate("DialogTightVNC", "Auflösung"))
+        self.vncLabelColor.setText(_translate("DialogTightVNC", "Farbtiefe"))
+        self.vncInputAutostart.setText(_translate("DialogTightVNC", "Automatisch starten"))
+        self.vncLabelParameter.setText(_translate("DialogTightVNC", "Weitere Parameter"))
+        self.vncInputRepeat.setText(_translate("DialogTightVNC", "Neu verbinden"))
+        self.vncLabelAlternative.setText(_translate("DialogTightVNC", "Alternative"))
+        self.vncInputIcon.setText(_translate("DialogTightVNC", "Symbol erstellen"))
+        self.vncLabelIconName.setText(_translate("DialogTightVNC", "Bezeichnung Symbol"))
+        self.vncOKButton.setText(_translate("DialogTightVNC", "OK"))
+        self.vncCancelButton.setText(_translate("DialogTightVNC", "Abbrechen"))
