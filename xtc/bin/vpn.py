@@ -13,7 +13,7 @@ import shutil
 
 def autostartvpn(self, ovpn, parameter, systemlogin):
     logging.info("autostartvpn")
-    vpnExec(self, ovpn, parameter, systemlogin)        
+    vpnExec(self, ovpn, parameter, systemlogin)
 
         
 def vpnExec(self, ovpn, parameter, systemlogin):
@@ -21,7 +21,7 @@ def vpnExec(self, ovpn, parameter, systemlogin):
     command = command + " " + ovpn
     command = command + " " + common.getRessource("commandVPNLog")
     if parameter != None:
-        command = command + " \"" + parameter  + "\""        
+        command = command + " \"" + parameter  + "\""
     result = True
     if systemlogin == "yes":
         needinput = True
@@ -40,11 +40,10 @@ def vpnExec(self, ovpn, parameter, systemlogin):
     
     if result:
         # run connection as thread
-        runconnect = connectThread.connectThread(command, "vpn")
+        connectionlog = common.getRessource("fileConnectionLog")
+        runconnect = connectThread.connectThread(command, "vpn", connectionlog)
         runconnect.threadCancel.connect(self.connectThreadCancel)
-        #self.connect(runconnect, QtCore.SIGNAL(
-        #             "connectThreadCancel(QString)"), self.connectThreadCancel)            
-        self.connectedThreads["vpn"] = runconnect        
+        self.connectedThreads["vpn"] = runconnect
         runconnect.start()
         if vpnCheckState():
             self.vpnButtonConnect.setEnabled(False)
@@ -114,14 +113,13 @@ def vpnGetFile(self):
     command = common.getRessource("commandMountUSB") 
     logging.info(command)
     common.runProgram(command, False)
-    filename = getFile("ovpn")
-    targetfilename = ""
+    filename = getFile("ovpn", common.getRessource("VPNUSBDirectory"))
     if filename != "":
         targetfilename = common.getRessource("VPNOvpnFile")
         command = common.getRessource("commandVPNCopy") + " " + filename + " " + targetfilename
         logging.info(command)
         common.runProgram(command)
-    self.vpnInputovpn.setText(targetfilename)
+        self.vpnInputovpn.setText(targetfilename)
     command = common.getRessource("commandUmountUSB") 
     logging.info(command)
     common.runProgram(command, False)
@@ -132,14 +130,38 @@ def vpnAdditionalFiles(self):
     command = common.getRessource("commandMountUSB") 
     logging.info(command)
     common.runProgram(command, False)
-    filename = getFile()
-    command = common.getRessource("commandVPNCopy") + " " + filename
-    logging.info(command)
-    common.runProgram(command, False)
+    filename = getFile(None, common.getRessource("VPNUSBDirectory"))
+    if filename != "":
+        command = common.getRessource("commandVPNCopy") + " " + filename
+        logging.info(command)
+        common.runProgram(command, False)
     command = common.getRessource("commandUmountUSB") 
     logging.info(command)
     common.runProgram(command, False)
 
+
+def vpnDeleteFile(self):
+    logging.info("vpnDeleteFile")
+    directory = common.getRessource("VPNDirectory")
+    filename = getFile(None, directory)
+    if filename != "":
+        if filename.startswith(directory):
+            logging.info("delete " + filename)
+            try:
+                if os.path.isfile(filename):
+                    os.remove(filename)
+                    # if ovpn file is deleted, remove it from dialog
+                    ovpnfilename = self.vpnInputovpn.text()
+                    if filename == ovpnfilename:
+                        self.vpnInputovpn.setText("")
+                    
+            except OSError as error:
+                logging.error(error)
+                common.errorDialog(error)
+        else:
+            logging.info("no delete " + filename)
+            common.errorDialog(common.getRessource("systemErrorDeleteFile"))
+    
     
 def readVPN(self):
     logging.info("readVPN")
@@ -155,7 +177,7 @@ def readVPN(self):
             filer.close()
         except IOError as error:
             logging.error(error)
-            errorDialog(error)
+            common.errorDialog(error)
     return values
 
 
@@ -177,28 +199,23 @@ def writeVPN(values):
         filew.close()
     except OSError as error:
         logging.error(error)
-        errorDialog(error)
+        common.errorDialog(error)
     try:
-        vpnfile = common.getRessource("VPNFile")
-        if os.path.isfile(vpnfile):
-            oldfile = vpnfile + ".old"
-            shutil.copyfile(vpnfile, oldfile)
         # write file to system
         command = common.getRessource("commandVPNFile")
         command = command + " " + tmpfile
         common.runProgram(command)
     except OSError as error:
         logging.error(error)
-        errorDialog(error)
+        common.errorDialog(error)
         
         
-def getFile(parameter=False):
+def getFile(parameter, directory):
     dialog = QtWidgets.QFileDialog()
     dialog.setFileMode(QtWidgets.QFileDialog.AnyFile)    
     if parameter == "ovpn":
-        #dialog.setFilter("OVPN files (*.ovpn)")
         dialog.setNameFilters(["OVPN files (*.ovpn)"])
-    dialog.setDirectory("/data/vpn")
+    dialog.setDirectory(directory)
     filename = ""
     if dialog.exec_():
         filenames = dialog.selectedFiles()
