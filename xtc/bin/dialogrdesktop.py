@@ -36,6 +36,10 @@ class dialogRDesktopUI(QtWidgets.QDialog, dialogrdesktopui.Ui_DialogRdesktop):
         self.rdesktopInputSystemLogin.setText(
                                               common.getRessource("configDialogLabelSystemLogin"))
         self.rdesktopLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))                                      
+        self.rdesktopInputIcon.setText(
+                                         common.getRessource("configDialogLabelIcon"))
+        self.rdesktopLabelIconName.setText(
+                                         common.getRessource("configDialogLabelIconName"))        
         #action
         self.rdesktopOKButton.clicked.connect(self.ButtonOK)
         self.rdesktopCancelButton.clicked.connect(self.ButtonCancel)
@@ -78,6 +82,16 @@ class dialogRDesktopUI(QtWidgets.QDialog, dialogrdesktopui.Ui_DialogRdesktop):
             if alternative != "":
                 index = self.rdesktopInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.rdesktopInputAlternative.setCurrentIndex(index)    
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.rdesktopInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.rdesktopInputIconName.setText(iconname)                
 
     def ButtonOK(self):
         logging.info("ButtonOK")
@@ -99,6 +113,9 @@ class dialogRDesktopUI(QtWidgets.QDialog, dialogrdesktopui.Ui_DialogRdesktop):
             error = True
         elif common.isNetworkAddress(self.rdesktopInputAddress.text()) is False:
             error = True
+        elif self.rdesktopInputIcon.isChecked() and self.rdesktopInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True        
 
         name = self.rdesktopInputName.text()
         if common.existingConnection(name):
@@ -127,6 +144,13 @@ class dialogRDesktopUI(QtWidgets.QDialog, dialogrdesktopui.Ui_DialogRdesktop):
 
             values["alternative"] = str(self.rdesktopInputAlternative.currentText())
 
+            if self.rdesktopInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.rdesktopInputIconName.text())
+            
             # delete old connection
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
