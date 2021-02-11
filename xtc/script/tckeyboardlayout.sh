@@ -1,2 +1,2 @@
 #! /bin/sh
-cp $1 /data/thinclient/keyboard
+cp $1 /data/thinclient/config/keyboard
