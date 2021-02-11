@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>621</width>
-     <height>473</height>
+     <height>506</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -146,15 +146,35 @@
       </property>
      </widget>
     </item>
+    <item row="15" column="0">
+     <widget class="QCheckBox" name="x2goInputIcon">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Symbol erstellen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="0">
+     <widget class="QLabel" name="x2goLabelIconName">
+      <property name="text">
+       <string>Bezeichnung Symbol</string>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="1">
+     <widget class="QLineEdit" name="x2goInputIconName"/>
+    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>470</y>
+     <y>520</y>
      <width>621</width>
-     <height>80</height>
+     <height>41</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -188,6 +208,7 @@
   </widget>
  </widget>
  <tabstops>
+  <tabstop>x2goInputName</tabstop>
   <tabstop>x2goInputAddress</tabstop>
   <tabstop>x2goInputUser</tabstop>
   <tabstop>x2goInputPassword</tabstop>
@@ -195,11 +216,12 @@
   <tabstop>x2goInputResolution</tabstop>
   <tabstop>x2goInputDesktop</tabstop>
   <tabstop>x2goInputParameter</tabstop>
-  <tabstop>x2goInputName</tabstop>
   <tabstop>x2goInputSystemLogin</tabstop>
   <tabstop>x2goInputAutostart</tabstop>
   <tabstop>x2goInputRepeat</tabstop>
   <tabstop>x2goInputAlternative</tabstop>
+  <tabstop>x2goInputIcon</tabstop>
+  <tabstop>x2goInputIconName</tabstop>
   <tabstop>x2goOKButton</tabstop>
   <tabstop>x2goCancelButton</tabstop>
  </tabstops>
