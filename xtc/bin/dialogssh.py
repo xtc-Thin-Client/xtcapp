@@ -28,6 +28,8 @@ class dialogsshUI(QtWidgets.QDialog, dialogsshui.Ui_Dialogssh):
         self.sshLabelParameter.setText(common.getRessource("configDialogLabelParameter"))
         self.sshInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
         self.sshLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))
+        self.sshInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.sshLabelIconName.setText(common.getRessource("configDialogLabelIconName"))        
         # action
         self.sshOKButton.clicked.connect(self.ButtonOK)
         self.sshCancelButton.clicked.connect(self.ButtonCancel)
@@ -56,7 +58,17 @@ class dialogsshUI(QtWidgets.QDialog, dialogsshui.Ui_Dialogssh):
             if alternative != "":
                 index = self.sshInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.sshInputAlternative.setCurrentIndex(index)    
-
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.sshInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.sshInputIconName.setText(iconname)
+            
     def ButtonOK(self):
         logging.info("ButtonOK")
         error = False
@@ -75,7 +87,10 @@ class dialogsshUI(QtWidgets.QDialog, dialogsshui.Ui_Dialogssh):
         elif self.sshInputPassword.text() == "":
             common.messageDialog("configDialogErrorPassword")
             error = True
-
+        elif self.sshInputIcon.isChecked() and self.sshInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
         name = self.sshInputName.text()
         if common.existingConnection(name):
             common.messageDialog("configDialogErrorAddress")
@@ -101,7 +116,14 @@ class dialogsshUI(QtWidgets.QDialog, dialogsshui.Ui_Dialogssh):
                 values["repeat"] = "no"
 
             values["alternative"] = str(self.sshInputAlternative.currentText())
-
+            
+            if self.sshInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.sshInputIconName.text())
+            
             # delete old connection
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
