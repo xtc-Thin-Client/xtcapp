@@ -7,7 +7,7 @@
 FILE=/tmp/isargon1.txt
 
 rm $FILE 2> /dev/null
-systemctl status argononed | grep " active " >> $FILE
+systemctl status argononed 2> /dev/null | grep " active " >> $FILE
 
 if (test -s $FILE)
 then

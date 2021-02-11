@@ -2,12 +2,16 @@
 # get usb automount state
 # return 0 = on, 1 = off
 
-FILE=/tmp/getusb.txt
-ls /etc/usbmount/usbmount.conf > $FILE
+FILEIN=/etc/usbmount/usbmount.conf
+if (test -s $FILEIN)
+then 
+  FILEOUT=/tmp/getusb.txt
+  ls $FILEIN > $FILEOUT
 
-if (test -s $FILE)  
-then
-  exit 0
+  if (test -s $FILEOUT)  
+  then
+    exit 0
+  fi
 fi
 
 exit 1

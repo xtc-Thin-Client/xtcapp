@@ -1,0 +1,8 @@
+table Icon
+  Caption: {iconname}
+  ToolTip.Caption {connectionname}
+  Command: /opt/thinclient/bin/run.py {connectionname}
+  Icon: /opt/thinclient/config/computer.png
+  Widht: 48
+  Height: 48
+  
