@@ -26,6 +26,8 @@ class dialogxdmcpUI(QtWidgets.QDialog, dialogxdmcpui.Ui_DialogXdmcp):
         self.xdmcpLabelParameter.setText(common.getRessource("configDialogLabelParameter"))
         self.xdmcpInputRepeat.setText(common.getRessource("configDialogLabelRepeat"))
         self.xdmcpLabelAlternative.setText(common.getRessource("configDialogLabelAlternative"))
+        self.xdmcpInputIcon.setText(common.getRessource("configDialogLabelIcon"))
+        self.xdmcpLabelIconName.setText(common.getRessource("configDialogLabelIconName"))
         # fill ComboBox
         common.fillComboBox(self, "xdmcpResolutions", self.xdmcpInputResolution)
         common.fillComboBoxConnections(self, self.xdmcpInputAlternative)
@@ -58,7 +60,17 @@ class dialogxdmcpUI(QtWidgets.QDialog, dialogxdmcpui.Ui_DialogXdmcp):
             if alternative != "":
                 index = self.xdmcpInputAlternative.findText(alternative, QtCore.Qt.MatchFixedString)
                 self.xdmcpInputAlternative.setCurrentIndex(index)    
-
+            # Icon
+            icon = "no"
+            if "icon" in connection:
+                icon = connection["icon"]
+            if icon == "yes":
+                self.xdmcpInputIcon.setChecked(True)
+            iconname = ""
+            if "iconname" in connection:
+                iconname = connection["iconname"]
+            self.xdmcpInputIconName.setText(iconname)
+                
     def ButtonOK(self):
         logging.info("ButtonOK")
         error = False
@@ -68,7 +80,10 @@ class dialogxdmcpUI(QtWidgets.QDialog, dialogxdmcpui.Ui_DialogXdmcp):
         elif self.xdmcpInputAddress.text() == "":
             common.messageDialog("configDialogErrorAddress")
             error = True
-
+        elif self.xdmcpInputIcon.isChecked() and self.xdcmpInputIconName.text() == "":
+            common.messageDialog("configDialogErrorIconName")
+            error = True
+            
         name = self.xdmcpInputName.text()
         if common.existingConnection(name):
             common.messageDialog("configDialogErrorAddress")
@@ -93,6 +108,13 @@ class dialogxdmcpUI(QtWidgets.QDialog, dialogxdmcpui.Ui_DialogXdmcp):
 
             values["alternative"] = str(self.xdmcpInputAlternative.currentText())
 
+            if self.xdmcpInputIcon.isChecked():
+                values["icon"] = "yes"
+            else:
+                values["icon"] = "no"
+            
+            values["iconname"] = str(self.xdmcpInputIconName.text())
+            
             # delete old connectio
             if self.connectionname != "":
                 common.deleteConnection(self.connectionname)
