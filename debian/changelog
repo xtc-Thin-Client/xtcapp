@@ -1,3 +1,9 @@
+xtc (1.8.1) UNRELEASED; urgency=low
+
+ * added libs
+ 
+ -- Stephan Eisler <stephan@eisler.de>  Thu, 11 Feb 2021 21:21:00 +0000
+ 
 xtc (1.8.0) UNRELEASED; urgency=low
 
  * xtc 3
